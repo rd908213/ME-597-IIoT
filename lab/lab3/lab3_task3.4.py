@@ -4,6 +4,7 @@ from pymodbus.constants import Endian
 from pymodbus.payload import BinaryPayloadDecoder
 import requests
 import datetime
+import asyncio
 
 URL = "http://10.165.67.146/"
 BODY = {
@@ -21,7 +22,7 @@ class PowerMeterRegister:
         self.name = name
         self.address = address
 
-    def read_register(self, client: ModbusTcpClient):
+    async def read_register(self, client: ModbusTcpClient):
         read = client.read_holding_registers(self.address, count=2, unit=1)
 
         if read.isError():
@@ -47,18 +48,18 @@ registers = [
 ]
 
 
-def read_modbus_data(client):
+async def read_modbus_data(client):
     if not client.connect():
         raise RuntimeError(f"Connect failed: {HOST}:{PORT}")
 
     now = datetime.datetime.now()
 
     for reg in registers:
-        value = reg.read_register(client)
+        value = await reg.read_register(client)
         print(f"{now}: {reg.name} is {value}")
 
 
-def read_iolink_data():
+async def read_iolink_data():
     now = datetime.datetime.now()
     req = requests.post(url=URL, json=BODY)
     data_json = req.json()
@@ -75,7 +76,11 @@ def read_iolink_data():
     print(f"{now}: Crest [-] is {crest}")
 
 
+async def main():
+    await asyncio.gather(read_modbus_data(client), read_iolink_data())
+
+
 while True:
     with ModbusTcpClient(HOST, port=PORT) as client:
-        read_modbus_data(client)
-        read_iolink_data()
+        # Run both tasks concurrently so as to not block one another
+        asyncio.run(main())

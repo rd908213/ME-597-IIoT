@@ -3,7 +3,7 @@
 <html lang="en">
 <head><meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>PL3_Colab1</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>L3_Colab1</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <style type="text/css">
     pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -7517,7 +7517,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p><a href="https://colab.research.google.com/github/purduelamm/purdue_me597_iiot/blob/main/lab/lab3/PL3_Colab1.ipynb" target="_parent"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg"/></a></p>
+<p><a href="https://colab.research.google.com/github/purduelamm/purdue_me597_iiot/blob/main/lab/lab3/L3_Colab1.ipynb" target="_parent"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg"/></a></p>
 </div>
 </div>
 </div>
@@ -7528,7 +7528,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="Prelab-3.1-IoT-Data-Collection-3---Industry-data-communication-protocols:-Power-meter-(Modbus)-and-vibration-(IO-Link)">Prelab 3.1 IoT Data Collection 3 - Industry data communication protocols: Power meter (Modbus) and vibration (IO-Link)<a class="anchor-link" href="#Prelab-3.1-IoT-Data-Collection-3---Industry-data-communication-protocols:-Power-meter-(Modbus)-and-vibration-(IO-Link)">¶</a></h1>
+<h1 id="Lab-3.1-IoT-Sensor-Data-Collection-3---Industry-data-communication-protocols:-Power-meter-(Modbus)-and-vibration-(IO-Link)">Lab 3.1 IoT Sensor Data Collection 3 - Industry data communication protocols: Power meter (Modbus) and vibration (IO-Link)<a class="anchor-link" href="#Lab-3.1-IoT-Sensor-Data-Collection-3---Industry-data-communication-protocols:-Power-meter-(Modbus)-and-vibration-(IO-Link)">¶</a></h1>
 </div>
 </div>
 </div>
@@ -7541,9 +7541,9 @@ a.anchor-link {
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="Learning-Goals">Learning Goals<a class="anchor-link" href="#Learning-Goals">¶</a></h2><p>Students will be able to:</p>
 <ol>
-<li>Define and describe Modbus protocol</li>
-<li>Define and describe IO-Link protocol</li>
-<li>Explain TCP/IP and REST API</li>
+<li>Assemble a data reading pipeline between Raspberry Pi and Power meter</li>
+<li>Assemble a data reading pipeline between Raspberry Pi and IO-Link master</li>
+<li>Calculate expectation parametric values to determine data collection efficiency</li>
 </ol>
 </div>
 </div>
@@ -7555,9 +7555,233 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="1.1-Introduction">1.1 Introduction<a class="anchor-link" href="#1.1-Introduction">¶</a></h2><p>Seamless real-time communication is the core prerequisite for all Industry 4.0 and Industrial Internet of
-Things (IIoT) implementations. In Lab3, we will collect data from two IoT devices, a power meter (<a href="https://www.accuenergy.com/products/acuvim-l-multifunction-power-energy-meter/">Acuvim L series</a>, AccuEnergy, Canada), and a vibration sensor (<a href="https://www.ifm.com/us/en/product/VVB001">VVB001</a>, IFM, Germany) with a IO-Link master (<a href="https://www.ifm.com/us/en/product/AL1302">AL1302</a>, IFM, Germany). Please visit and look into both web pages of the devices. For the power meter, Modbus protocol will be used. On the other hand, for the vibration sensor, the IO-Link protocol will be used. When we read data from the vibration sensor through the IO-Link master, we use REST API via TCP/IP (so-called EtherNet/IP) communication. But the communication between the vibration sensor and the IO-Link master is being made by IO-Link protocol. This prelab is to install a related package on Raspberry Pi and to be familiar with the industry standard protocols. Modbus and IO-Link are representative protocols in Fieldbus communications. And TCP/IP is a representative protocol in Industrial Ethernet communications.</p>
-<p>On top of that, it is highly recommended to go through JSON data format and how to parse it from online resources.</p>
+<h2 id="1.1-Preliminary-Briefing-on-Sensors-and-Target-Machine">1.1 Preliminary Briefing on Sensors and Target Machine<a class="anchor-link" href="#1.1-Preliminary-Briefing-on-Sensors-and-Target-Machine">¶</a></h2><p>Nowadays, in Industry 4.0 era, there are a lot of IoT devices and machines available which follow the industry standard communications and protocols. The purpose of Lab 3 is to collect data using industry standard IoT communications and protocols. We will collect data from two devices, 1) a multi-functional power meter and 2) an IO-Link vibration sensor via a IO-Link master, to practice industry IoT communication and data aggregation methods from devices equipped with IoT capabilities. It is not surprising that most, probably every, manufacturing equipment is operated by electrical power. Measuring power consumption plays an important role in operating the machine efficiently. In addition, vibration from machinary contains information of operation and wellness. These information are useful to determine performance of the machine and enable us to operate shop floor effectively. However, the available information depends on the device and communication.</p>
+<p>To monitor the power consumption of a machine, we will use a multi-functional power meter (AccuEnergy, <a href="https://www.accuenergy.com/products/acuvim-l-multifunction-power-energy-meter/">Acuvim-CL-D</a>) and a current transformer (AccuEnergy, <a href="https://www.accuenergy.com/products/acuct-hinged-split-core-current-transformers/">AcuCT-H040-5:333</a>). This power meter is equipped with Modbus RTU protocol via RS485 (serial communication). The power meter and the current transformer are shown in Figure 1.</p>
+<img alt="No description has been provided for this image" src="https://github.com/purduelamm/purdue_me597_iiot/blob/main/lab/img/lab3_fig1.png?raw=true" width="40%"/>
+<p><em>Figure 1 Power meter (left) and current transformer (right)</em></p>
+<p>To monitor the vibration, we will use an IO-Link vibration sensor (IFM, <a href="https://www.ifm.com/us/en/product/VVB001">VVB001</a>) and an IO-Link master (IFM, <a href="https://www.ifm.com/us/en/product/AL1302">AL3102</a>). This IO-Link master is equipped with IoT capability. To be specific, it supports JSON interface using REST API via TCP/IP communication. This makes us easy to access the IO-Link sensor data. The vibration sensor and the IO-Link master are shown in Figure 2.</p>
+<img alt="No description has been provided for this image" src="https://github.com/purduelamm/purdue_me597_iiot/blob/main/lab/img/lab3_fig2.png?raw=true" width="30%"/>
+<p><em>Figure 2 IO-Link vibration sensor (left) and IO-Link master (right)</em></p>
+<p>As a target machine of measuring electric power, a single stage vacuum pump (HBS Vacuum Equipment Factory, <a href="http://www.hbspump.com/oil-vacuumpump/single-stage-vacuum-pump/hbs-vacuum-pump-rs-2-single-stage-oil-havc.html">RS-2</a>). The selected specifications of the vacuum pump are shown in Table 1.</p>
+<img alt="No description has been provided for this image" src="https://github.com/purduelamm/purdue_me597_iiot/blob/main/lab/img/lab3_fig3.png?raw=true" width="40%"/>
+<p><em>Figure 3 Vacuum pump</em></p>
+<p><em>Table 1 Power meter metering specifications</em></p>
+<table width="513">
+<tbody>
+<tr>
+<td width="91">
+<p>Type</p>
+</td>
+<td width="122">
+<p>Parameter</p>
+</td>
+<td width="72">
+<p>Accuracy</p>
+</td>
+<td width="78">
+<p>Resolution</p>
+</td>
+<td width="150">
+<p>Range</p>
+</td>
+</tr>
+<tr>
+<td rowspan="7" width="91">
+<p>Metering</p>
+</td>
+<td width="122">
+<p>Voltage</p>
+</td>
+<td width="72">
+<p>0.5%</p>
+</td>
+<td width="78">
+<p>0.1 V</p>
+</td>
+<td width="150">
+<p>20 V ~ 1000 kV</p>
+</td>
+</tr>
+<tr>
+<td width="122">
+<p>Current</p>
+</td>
+<td width="72">
+<p>0.5%</p>
+</td>
+<td width="78">
+<p>0.001 A</p>
+</td>
+<td width="150">
+<p>0 ~ 50 kA</p>
+</td>
+</tr>
+<tr>
+<td width="122">
+<p>Power (True)</p>
+</td>
+<td width="72">
+<p>0.5%</p>
+</td>
+<td width="78">
+<p>1 W</p>
+</td>
+<td width="150">
+<p>-9999 ~ 9999 MW</p>
+</td>
+</tr>
+<tr>
+<td width="122">
+<p>Reactive power</p>
+</td>
+<td width="72">
+<p>0.5%</p>
+</td>
+<td width="78">
+<p>1 var</p>
+</td>
+<td width="150">
+<p>-9999 ~ 9999 Mvar</p>
+</td>
+</tr>
+<tr>
+<td width="122">
+<p>Apparent power</p>
+</td>
+<td width="72">
+<p>0.5%</p>
+</td>
+<td width="78">
+<p>1 VA</p>
+</td>
+<td width="150">
+<p>0 ~ 9999 MVA</p>
+</td>
+</tr>
+<tr>
+<td width="122">
+<p>Power Factor</p>
+</td>
+<td width="72">
+<p>0.5%</p>
+</td>
+<td width="78">
+<p>0.001</p>
+</td>
+<td width="150">
+<p>-1.0 ~ 1.0</p>
+</td>
+</tr>
+<tr>
+<td width="122">
+<p>Frequency</p>
+</td>
+<td width="72">
+<p>0.2%</p>
+</td>
+<td width="78">
+<p>0.01 Hz</p>
+</td>
+<td width="150">
+<p>45 ~ 65 Hz</p>
+</td>
+</tr>
+<tr>
+<td width="91">
+<p> </p>
+</td>
+<td colspan="2" width="194">
+<p> </p>
+</td>
+<td width="78">
+<p> </p>
+</td>
+<td width="150">
+<p> </p>
+</td>
+</tr>
+<tr>
+<td width="91">
+<p>Type</p>
+</td>
+<td width="122">
+<p>Parameter</p>
+</td>
+<td width="72">
+<p>Min</p>
+</td>
+<td width="78">
+<p>Max</p>
+</td>
+<td width="150">
+<p>Unit</p>
+</td>
+</tr>
+<tr>
+<td rowspan="2" width="91">
+<p>Control</p>
+<p>power</p>
+</td>
+<td width="122">
+<p>Operating voltage</p>
+</td>
+<td width="72">
+<p>20</p>
+</td>
+<td width="78">
+<p>60</p>
+</td>
+<td width="150">
+<p>VDC</p>
+</td>
+</tr>
+<tr>
+<td width="122">
+<p>Burden</p>
+</td>
+<td width="72">
+<p> </p>
+</td>
+<td width="78">
+<p>3</p>
+</td>
+<td width="150">
+<p>W</p>
+</td>
+</tr>
+<tr>
+<td rowspan="2" width="91">
+<p>Operating environment</p>
+</td>
+<td width="122">
+<p>Temperature</p>
+</td>
+<td width="72">
+<p>-25</p>
+</td>
+<td width="78">
+<p>70</p>
+</td>
+<td width="150">
+<p>°C</p>
+</td>
+</tr>
+<tr>
+<td width="122">
+<p>Humidity</p>
+</td>
+<td width="72">
+<p>5</p>
+</td>
+<td width="78">
+<p>95</p>
+</td>
+<td width="150">
+<p>%RH</p>
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -7568,7 +7792,12 @@ Things (IIoT) implementations. In Lab3, we will collect data from two IoT device
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="1.2-Python-package-installation-on-Raspberry-Pi">1.2 Python package installation on Raspberry Pi<a class="anchor-link" href="#1.2-Python-package-installation-on-Raspberry-Pi">¶</a></h2>
+<h2 id="1.2-System-overview">1.2 System overview<a class="anchor-link" href="#1.2-System-overview">¶</a></h2><p>In Lab3, we will measure the electric power consumption and vibration of the vacuum pump for degassing system. The vacuum degassing system is used in many manufacturing and chemical industries to degas liquid, paste-like, and moist products. The mini-sized vacuum degassing system for Lab 3 is shown in Figure 4. To make a vacuum environment of it, a vacuum pump sucks out air from the chamber. It takes the standard AC voltage in the US which is 120 VAC (single-phase) 60 Hz. Here, without measurement, we expect that the measured voltage and frequency from the power meter are 120 Volt and 60 Hz, respectively. Let's confirm those in the following section.</p>
+<img alt="No description has been provided for this image" src="https://github.com/purduelamm/purdue_me597_iiot/blob/main/lab/img/lab3_fig4.png?raw=true" width="70%"/>
+<p><em>Figure 4 Hardware configuration of vacuum degassing system</em></p>
+<p>The entire system is shown in Figure 5. The power meter measures the electric parameters of the vacuum pump and the vibration sensor is placed on the pump. The vibration sensor is connected to the IO-Link master. With respect to the network, the two devices, the power meter and the IO-Link master, are connected to the router using the Ethernet cables.</p>
+<img alt="No description has been provided for this image" src="https://github.com/purduelamm/purdue_me597_iiot/blob/main/lab/img/lab3_fig5.png?raw=true" width="70%"/>
+<p><em>Figure 5 Hardware configuration of entire system</em></p>
 </div>
 </div>
 </div>
@@ -7579,12 +7808,16 @@ Things (IIoT) implementations. In Lab3, we will collect data from two IoT device
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="'pymodbus'-package-installation">'pymodbus' package installation<a class="anchor-link" href="#'pymodbus'-package-installation">¶</a></h3><p>Install 'mymodbus' package on your Raspberry Pi as below.</p>
-<hr/>
-<p><strong><img alt="No description has been provided for this image" src="https://github.com/purduelamm/purdue_me597_iiot/blob/main/lab/img/icon_RaspberryPi.png?raw=true" width="20"/>Raspberry Pi - Terminal</strong></p>
-<p><code>pip3 install pymodbus==2.5.3</code></p>
-<hr/>
-<p>After installing 'pymodbus' package, see if it is installed successfully using the command 'pip3 list'.</p>
+<h2 id="1.3-Power-Meter-Data-Collection-Using-the-Modbus-Protocol">1.3 Power Meter Data Collection Using the Modbus Protocol<a class="anchor-link" href="#1.3-Power-Meter-Data-Collection-Using-the-Modbus-Protocol">¶</a></h2><p>The details of the power meter system and hardware configuration are shown in Figure 6. The power meter is equipped with Modbus RTU communication option. Because Modbus RTU which uses serial communications cannot have multiple masters, we will use Modbus RTU (slave side) to Modbus TCP (master side) converter (Moxa, <a href="https://www.moxa.com/en/products/industrial-edge-connectivity/protocol-gateways/modbus-tcp-gateways/mgate-mb3180-mb3280-mb3480-series">MGate MB3180</a>). The converter allows us to communicate the Modbus RTU device via Modbus TCP. Modbus RTU is limited to a single master with multiple slaves whereas multiple masters and multiple slaves’ configurations are possible if using Modbus TCP. Schematics of Modbus RTU and Modbus TCP are shown in Figure 7. Since Modbus RTU and Modbus TCP share and follow the standard Modbus protocol, it is possible to use converting data each other. In the most industry, Modbus RTU is commonly used due to cost and the reliability of data transmission. The main difference between Modbus RTU and Modbus TCP is mostly in the transport frames or the wrapper around the PDU (Protocol Data Unit). In both forms of Modbus, application specific addressing and error checking are attached to the PDU to make the ADU (Application Data Unit). In Modbus TCP is encapsulated in a TCP packet. The TCP protocol handles the error checking, which is why it is omitted from the Modbus TCP ADU. The comparisons of Modbus data frames are shown in Figure 8.</p>
+<img alt="No description has been provided for this image" src="https://github.com/purduelamm/purdue_me597_iiot/blob/main/lab/img/lab3_fig6.png?raw=true" width="70%"/>
+<p><em>Figure 6 Hardware configuration of power meter</em></p>
+<img alt="No description has been provided for this image" src="https://github.com/purduelamm/purdue_me597_iiot/blob/main/lab/img/lab3_fig7.png?raw=true" width="70%"/>
+<p><em>Figure 7 Schematics of Modbus RTU (top) and Modbus TCP (bottom)</em></p>
+<img alt="No description has been provided for this image" src="https://github.com/purduelamm/purdue_me597_iiot/blob/main/lab/img/lab3_fig8.png?raw=true" width="70%"/>
+<p><em>Figure 8 Comparisons of Modbus frames: General (top), Modbus RTU (middle), and Modbus TCP (bottom)</em></p>
+<p>The electrical wiring schematic for power meter is shown in Figure 9. The power meter measures both the voltage and the current by load. CT indicates current transformer to measure current of the wire. Please note that the wiring configuration depends on the electrical specifications of the target load (machine). You can check typical wiring configurations in the manual.</p>
+<img alt="No description has been provided for this image" src="https://github.com/purduelamm/purdue_me597_iiot/blob/main/lab/img/lab3_fig9.png?raw=true" width="50%"/>
+<p><em>Figure 9 Schematic of electrical wiring for power measurement</em></p>
 </div>
 </div>
 </div>
@@ -7595,9 +7828,13 @@ Things (IIoT) implementations. In Lab3, we will collect data from two IoT device
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Task-1.1">Task 1.1<a class="anchor-link" href="#Task-1.1">¶</a></h3><p>Capture your terminal window as Figure 1 after running 'pip3 list'.</p>
-<img alt="No description has been provided for this image" src="https://github.com/purduelamm/purdue_me597_iiot/blob/main/lab/img/prelab3_fig1.png?raw=true" width="80%"/>
-<p><em>Figure 1 Checking the installed Python packages</em></p>
+<h2 id="1.4-IO-Link-Data-Collection-Using-JSON-interface">1.4 IO-Link Data Collection Using JSON interface<a class="anchor-link" href="#1.4-IO-Link-Data-Collection-Using-JSON-interface">¶</a></h2><p>Unlike traditional control signals, IO-Link offers increased bandwidth and full access to the sensor’s intelligence without changing sensors and wiring. Using your existing architecture, IO-Link opens new possibilities to maximize the overall efficiency of your machines and processes. From easy and fast setup to additional machine monitoring data to process transparency from the machine level to the ERP software, IO-Link offers many benefits. See below for just some other ways you can use IO-Link.</p>
+<p>The IO-Link master provides useful features. It separates between automation network and IT network so that we use the IT network for monitoring purpose. It has 8 ports to be connected to the IO-Link devices such as the vibration sensor. Moreover, it transmits machine data, process parameters and diagnostic data to the controller with ProfiNet (PLC/controller side) interface and separate MQTT JSON interface (IoT/ERP side) as Figure 10. In this lab, we will use JSON interface to extract vibration data from the IO-Link master.</p>
+<p>The sensor placement and hardware configuration are shown in Figure 11. The vibration sensor has a single axis. Note that when you deploy vibration/acceleration sensor to a rotary machine, the rule of thumb for placement is to make the measurement axis be a radial direction of the rotating motion.</p>
+<img alt="No description has been provided for this image" src="https://github.com/purduelamm/purdue_me597_iiot/blob/main/lab/img/lab3_fig10.png?raw=true" width="50%"/>
+<p><em>Figure 10 IO-Link communication protocols and applications: <a href="https://www.ifm.com/us/en/shared/technologies/io-link/y-path-connection-for-iiot-solutions/y-path-connection-for-iiot-solutions">source</a></em></p>
+<img alt="No description has been provided for this image" src="https://github.com/purduelamm/purdue_me597_iiot/blob/main/lab/img/lab3_fig11.png?raw=true" width="80%"/>
+<p><em>Figure 11 IO-Link sensor deployment: close-up photo of vibration sensor (left) and hardware configuration</em></p>
 </div>
 </div>
 </div>
@@ -7608,292 +7845,8 @@ Things (IIoT) implementations. In Lab3, we will collect data from two IoT device
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<hr/>
-<img alt="No description has been provided for this image" src="https://github.com/rd908213/ME-597-IIoT/blob/main/lab/lab3/img/PL3_Task1.1.png?raw=true" width="100%"/>
-<hr/>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Task-1.2">Task 1.2<a class="anchor-link" href="#Task-1.2">¶</a></h3><p>Address the following questions by checking provided resources.</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [5]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">YouTubeVideo</span>
-<span class="n">YouTubeVideo</span><span class="p">(</span><span class="s1">'txi2p5_OjKU'</span><span class="p">)</span>
-
-<span class="c1">#Watch this video to answer question 1.</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[5]:</div>
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
-<iframe allowfullscreen="" frameborder="0" height="300" src="https://www.youtube.com/embed/txi2p5_OjKU" width="400"></iframe>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h4 id="1)-Explain-what-is-Modbus-protocol?">1) Explain what is Modbus protocol?<a class="anchor-link" href="#1)-Explain-what-is-Modbus-protocol?">¶</a></h4>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<hr/>
-<p>Modbus is the oldest open automation communication protocol for industrial devices. It is most commonly used to facilitate Supervisory Control and Data Acquisition or SCADA. It is used as a common communication protocol for devices working together in a system even if they are made by different manufacturers. Modbus is designed based on a master-slave architecture. This means that a single master computer sends messages to its slaves, commonly sensors or other peripheral devices, and expects responses of either sensor readings or acknowledgement.</p>
-<hr/>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [2]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">YouTubeVideo</span>
-<span class="n">YouTubeVideo</span><span class="p">(</span><span class="s1">'YDbWt_wE3YE'</span><span class="p">)</span>
-
-<span class="c1">#Watch this video to answer question 2.</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[2]:</div>
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
-<iframe allowfullscreen="" frameborder="0" height="300" src="https://www.youtube.com/embed/YDbWt_wE3YE" width="400"></iframe>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h4 id="2)-Explain-what-is-IO-Link-protocol?">2) Explain what is IO-Link protocol?<a class="anchor-link" href="#2)-Explain-what-is-IO-Link-protocol?">¶</a></h4>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<hr/>
-<p>The IO-Link protocol is a protocol that connects sensors and actuators to an interface with PROFINET. This PROFINET can communicate with a centralized controller that can display visual data or communicate with higher level SCADA or MES devices. It allows for easy install, faster data processing, and data parameterization. IO-Link exists at a lower level than MODBUS since IO-link handles binary and analog inputs and outputs from sensors and actuators rather than sophisticated messages.</p>
-<hr/>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [3]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">YouTubeVideo</span>
-<span class="n">YouTubeVideo</span><span class="p">(</span><span class="s1">'614QGgw_FA4'</span><span class="p">)</span>
-
-<span class="c1">#Watch this video to answer question 3.</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[3]:</div>
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
-<iframe allowfullscreen="" frameborder="0" height="300" src="https://www.youtube.com/embed/614QGgw_FA4" width="400"></iframe>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h4 id="3)-Explain-what-is-TCP/IP-protocol?">3) Explain what is TCP/IP protocol?<a class="anchor-link" href="#3)-Explain-what-is-TCP/IP-protocol?">¶</a></h4>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<hr/>
-<p>TCP/IP is an internet communication protocol that describes how messages should be sent and recieved over the internet. It decribes how they should be</p>
-<ol>
-<li>Broken Down</li>
-<li>Addressed</li>
-<li>Transmitted</li>
-<li>Routed</li>
-<li>Received</li>
-</ol>
-<p>TCP defines how applications should create communication channels and manages how messages should be broken down and reassembled.
-IP defines how to address devices to ensure that messages are recieved by the correct device.</p>
-<p>TCP/IP has four layers:</p>
-<ol>
-<li>Application Layer: Standardized data exchange protocols</li>
-<li>Transport Layer: End-to-end communication accross network using TCP</li>
-<li>Network Layer: Connects networks for messages to be sent and received outside of the network boundaries.</li>
-<li>Physical Layer: Messages that only operate on a link or nodes and devices that exist on a network.</li>
-</ol>
-<hr/>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [4]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">YouTubeVideo</span>
-<span class="n">YouTubeVideo</span><span class="p">(</span><span class="s1">'lsMQRaeKNDk'</span><span class="p">)</span>
-
-<span class="c1">#Watch this video to answer question 4.</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[4]:</div>
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
-<iframe allowfullscreen="" frameborder="0" height="300" src="https://www.youtube.com/embed/lsMQRaeKNDk" width="400"></iframe>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h4 id="4)-Explain-what-is-REST-API?">4) Explain what is REST API?<a class="anchor-link" href="#4)-Explain-what-is-REST-API?">¶</a></h4>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<hr/>
-<p>REST API stands for Representational State Transfer API. It is a communication protocol for web applications to communicate with a cloud or server. Some of its benefits include its stability, statelessness, simplicity, scalability, and its high performance due to caching.</p>
-<p>REST API consists of a request from an application and the response received from the server. Requests send commands for CRUD or Create, Read, Update, and Delete. Over RESTful communication, these translate into the POST, GET, PUT and DELETE operations. Requests consist of headers, operation, endpoint to use, and the request body. The response typically is a simple json message with information from the cloud or server.</p>
-<hr/>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h4 id="5)-What-can-be-the-applications-of-power-and-vibration-monitoring-in-the-industry?">5) What can be the applications of power and vibration monitoring in the industry?<a class="anchor-link" href="#5)-What-can-be-the-applications-of-power-and-vibration-monitoring-in-the-industry?">¶</a></h4>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<hr/>
-<p>Some examples of power and vibration monitoring in industry include:</p>
-<ol>
-<li>Monitoring the power output of a generator.</li>
-<li>Ensuring that large spinning equipment is not exceeding its manufacturing specification.</li>
-<li>Identifying where electrical faults are caused for easier diagnosis and maintenance.</li>
-<li>Giving live feedback data in automotive applications for battery health and the degradation of spinning components.</li>
-<li>Identifying when motors are physically blocked from rotating based on their electrical resistance.</li>
-</ol>
-<hr/>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p><br/></p>
-<p>Please continue to <a href="https://colab.research.google.com/github/purduelamm/purdue_me597_iiot/blob/main/lab/lab3/PL3_Colab2.ipynb">Prelab 3.2 here</a>.</p>
+<p><br/>
+Please continue to <a href="https://colab.research.google.com/github/purduelamm/purdue_me597_iiot/blob/main/lab/lab3/L3_Colab2.ipynb">Lab 3.2 here</a>.</p>
 </div>
 </div>
 </div>

@@ -3,7 +3,7 @@
 <html lang="en">
 <head><meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>PL3_Colab1</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>L3_Colab3</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <style type="text/css">
     pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -7517,7 +7517,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p><a href="https://colab.research.google.com/github/purduelamm/purdue_me597_iiot/blob/main/lab/lab3/PL3_Colab1.ipynb" target="_parent"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg"/></a></p>
+<p><a href="https://colab.research.google.com/github/purduelamm/purdue_me597_iiot/blob/main/lab/lab3/L3_Colab3.ipynb" target="_parent"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg"/></a></p>
 </div>
 </div>
 </div>
@@ -7528,7 +7528,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="Prelab-3.1-IoT-Data-Collection-3---Industry-data-communication-protocols:-Power-meter-(Modbus)-and-vibration-(IO-Link)">Prelab 3.1 IoT Data Collection 3 - Industry data communication protocols: Power meter (Modbus) and vibration (IO-Link)<a class="anchor-link" href="#Prelab-3.1-IoT-Data-Collection-3---Industry-data-communication-protocols:-Power-meter-(Modbus)-and-vibration-(IO-Link)">¶</a></h1>
+<h1 id="Lab-3.3-IO-Link-data-collection-using-JSON-interface">Lab 3.3 IO-Link data collection using JSON interface<a class="anchor-link" href="#Lab-3.3-IO-Link-data-collection-using-JSON-interface">¶</a></h1>
 </div>
 </div>
 </div>
@@ -7539,12 +7539,21 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Learning-Goals">Learning Goals<a class="anchor-link" href="#Learning-Goals">¶</a></h2><p>Students will be able to:</p>
+<h2 id="3.1-Python-programming-for-data-collection-from-IO-Link-master">3.1 Python programming for data collection from IO-Link master<a class="anchor-link" href="#3.1-Python-programming-for-data-collection-from-IO-Link-master">¶</a></h2><p>The entire schematic of the data communication using JSON interface using REST API for the IO-Link vibraton device from the IO-Link master is illustrated in Figure 15. As the power meter data collection, your computers (laptop and Raspberry Pi) are on the router network. The IO-Link master is also on the same router network with a static IP address. The ethernet cable (RJ45) is used for connection between the router and the IO-Link master. Note that the IO-Link vibration sensor is connected to the <strong>port 1</strong> of the master. In this case using REST API, each of your computer is not a master but client. The IO-Link master is a server. The data communication sequence to read data from the IO-Link master is summarized as follows.</p>
 <ol>
-<li>Define and describe Modbus protocol</li>
-<li>Define and describe IO-Link protocol</li>
-<li>Explain TCP/IP and REST API</li>
+<li>The computer (Raspberry Pi or laptop) requests data using REST API's post method to the IO-Link master</li>
+<li>The IO-Link master read the IO-Link sensor data by the IO-Link protocol</li>
+<li>The IO-Link master sends back the received data from the IO-Link sensor to the computer as the JSON format.</li>
+<li>The computer receives the JSON data and parse it.</li>
 </ol>
+<p>To do this, we will use Python and 'requests' and 'json' packages which are the basic packages in Python. Moreover, refer to details of JSON interface of the IFM IO-Link master <a href="https://github.com/purduelamm/purdue_me597_iiot/blob/main/lab/lab3/IFM_JSON_Integration_for_IO-Link.pdf?raw=true">here</a>. The IO-Link vibration sensor (VVB001) manual for interface is also available <a href="https://github.com/purduelamm/purdue_me597_iiot/blob/main/lab/lab3/IFM_VVB001_IO-Link_Interface_Description.pdf?raw=true">here</a>. <strong>Please note that this lab manual skips all details to extract data for your convenience. If you perform data collection from other IoT devices, the first thing you have to do is to read the manual and figure out data communication protocols and take appropriate action.</strong></p>
+<img alt="No description has been provided for this image" src="https://github.com/purduelamm/purdue_me597_iiot/blob/main/lab/img/lab3_fig15.png?raw=true" width="90%"/>
+<p><em>Figure 15 Schematic of communication for IO-Link data collection using JSON interface</em></p>
+<p><strong>The IP address of the gateway at Lab3</strong>.
+<br/>
+Offline class : 192.168.1.102
+<br/>
+<font color="”green”"> Online class </font> : 10.165.67.146</p>
 </div>
 </div>
 </div>
@@ -7555,49 +7564,10 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="1.1-Introduction">1.1 Introduction<a class="anchor-link" href="#1.1-Introduction">¶</a></h2><p>Seamless real-time communication is the core prerequisite for all Industry 4.0 and Industrial Internet of
-Things (IIoT) implementations. In Lab3, we will collect data from two IoT devices, a power meter (<a href="https://www.accuenergy.com/products/acuvim-l-multifunction-power-energy-meter/">Acuvim L series</a>, AccuEnergy, Canada), and a vibration sensor (<a href="https://www.ifm.com/us/en/product/VVB001">VVB001</a>, IFM, Germany) with a IO-Link master (<a href="https://www.ifm.com/us/en/product/AL1302">AL1302</a>, IFM, Germany). Please visit and look into both web pages of the devices. For the power meter, Modbus protocol will be used. On the other hand, for the vibration sensor, the IO-Link protocol will be used. When we read data from the vibration sensor through the IO-Link master, we use REST API via TCP/IP (so-called EtherNet/IP) communication. But the communication between the vibration sensor and the IO-Link master is being made by IO-Link protocol. This prelab is to install a related package on Raspberry Pi and to be familiar with the industry standard protocols. Modbus and IO-Link are representative protocols in Fieldbus communications. And TCP/IP is a representative protocol in Industrial Ethernet communications.</p>
-<p>On top of that, it is highly recommended to go through JSON data format and how to parse it from online resources.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="1.2-Python-package-installation-on-Raspberry-Pi">1.2 Python package installation on Raspberry Pi<a class="anchor-link" href="#1.2-Python-package-installation-on-Raspberry-Pi">¶</a></h2>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="'pymodbus'-package-installation">'pymodbus' package installation<a class="anchor-link" href="#'pymodbus'-package-installation">¶</a></h3><p>Install 'mymodbus' package on your Raspberry Pi as below.</p>
-<hr/>
-<p><strong><img alt="No description has been provided for this image" src="https://github.com/purduelamm/purdue_me597_iiot/blob/main/lab/img/icon_RaspberryPi.png?raw=true" width="20"/>Raspberry Pi - Terminal</strong></p>
-<p><code>pip3 install pymodbus==2.5.3</code></p>
-<hr/>
-<p>After installing 'pymodbus' package, see if it is installed successfully using the command 'pip3 list'.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Task-1.1">Task 1.1<a class="anchor-link" href="#Task-1.1">¶</a></h3><p>Capture your terminal window as Figure 1 after running 'pip3 list'.</p>
-<img alt="No description has been provided for this image" src="https://github.com/purduelamm/purdue_me597_iiot/blob/main/lab/img/prelab3_fig1.png?raw=true" width="80%"/>
-<p><em>Figure 1 Checking the installed Python packages</em></p>
+<h3 id="Task-3.1">Task 3.1<a class="anchor-link" href="#Task-3.1">¶</a></h3><p>Capture the results of checking network connection using ping test from both Raspberry Pi and laptop to the IO-Link master for REST API as Figure 13 (<a href="https://githubtocolab.com/purduelamm/purdue_me597_iiot/blob/main/lab/lab3/L3_Colab2.ipynb">Lab3.2</a>) and attach it to the report.</p>
+<ul>
+<li>Please note that the IP address of the IO-Link master will be different from the example.</li>
+</ul>
 </div>
 </div>
 </div>
@@ -7609,8 +7579,7 @@ Things (IIoT) implementations. In Lab3, we will collect data from two IoT device
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <hr/>
-<img alt="No description has been provided for this image" src="https://github.com/rd908213/ME-597-IIoT/blob/main/lab/lab3/img/PL3_Task1.1.png?raw=true" width="100%"/>
-<hr/>
+<h2 id="Purdue-ECN-blocked-PING">Purdue ECN blocked PING<a class="anchor-link" href="#Purdue-ECN-blocked-PING">¶</a></h2>
 </div>
 </div>
 </div>
@@ -7621,7 +7590,240 @@ Things (IIoT) implementations. In Lab3, we will collect data from two IoT device
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Task-1.2">Task 1.2<a class="anchor-link" href="#Task-1.2">¶</a></h3><p>Address the following questions by checking provided resources.</p>
+<hr/>
+<h2 id="Purdue-ECN-blocked-PING">Purdue ECN blocked PING<a class="anchor-link" href="#Purdue-ECN-blocked-PING">¶</a></h2>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<p>If ping test works, you are ready to request data. Before we request data to the IO-Link master, let's see what data is available from the sensor. The selected available data is shown in Table 4. These information is also available on the manual <a href="https://github.com/Eunseob/purdue_me597/blob/main/lab/lab3/IFM_VVB001_IO-Link_Interface_Description.pdf?raw=true">here</a> on page 9. Other than data from Table 4, tens of more data are available. In this lab, we will collect the selected data only. The refresh rate of the sensor is approximately 200 msec in default setting.</p>
+<p><strong>Note that to take an appropriate value with unit, a multiplier in the Range column of Table 4 must be applied after receiving data. For example, after multiplying 0.0001 to v-Rms value, the measured data has unit of m/s.</strong></p>
+<p><em>Table 4 Selected process data from VVB001 sensor</em></p>
+<table width="100%">
+<thead>
+<tr>
+<th>Process data input</th>
+<th>Description</th>
+<th>Record Type</th>
+<th>Range</th>
+<th>Unit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v-Rms</td>
+<td>Speed effective value</td>
+<td rowspan="5">IntegerT (16 bit)</td>
+<td>(0 to 495)*0.0001</td>
+<td>m/s</td>
+</tr>
+<tr>
+<td>a-Peak</td>
+<td>Acceleration peak value</td>
+<td>(0 to 4903)*0.1</td>
+<td>m/s2</td>
+</tr>
+<tr>
+<td>a_Rms</td>
+<td>Acceleration effective value</td>
+<td>(0 to 4903)*0.1</td>
+<td>m/s2</td>
+</tr>
+<tr>
+<td>Temperature</td>
+<td>Current temperature</td>
+<td>(-300 to 800)*0.1</td>
+<td>°C</td>
+</tr>
+<tr>
+<td>Crest</td>
+<td>Acceleration crest factor</td>
+<td>(10 to 500)*0.1</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<hr/>
+<p><strong><img alt="No description has been provided for this image" src="https://github.com/purduelamm/purdue_me597_iiot/blob/main/lab/img/icon_Python.png?raw=tru" width="20"/>Python - Python 3 (<a href="https://github.com/purduelamm/purdue_me597_iiot/blob/main/lab/lab3/lab3_sample2.py?raw=true">lab3_sample2.py</a>)</strong></p>
+<pre><code>import requests
+import json
+import datetime
+
+# define the IO-Link master IP
+URL = "http://192.168.1.102/" # For online student with Cisco VPN : 10.165.67.146
+
+# define JSON body for post method
+# for the details, see the JSON interface manual
+# note that the sensor is connected to port 1
+BODY = {
+        "code":"request",
+        "cid":-1,
+        "adr":"/iolinkmaster/port[1]/iolinkdevice/iolreadacyclic",
+        "data":{"index":40,"subindex":0}    
+}
+
+now = datetime.datetime.now()
+
+# this requests data to the IO-Link master
+# using POST method of REST API with BODY information
+# req object will be response from the IO-Link master
+req = requests.post(url = URL, json=BODY)
+
+data_json = req.json() # this is json format data of req
+
+# because the the JSON data itself is in unformatted,
+# dumps method of JSON module below helps us to see the data in JSON format
+data_json_formatted = json.dumps(data_json, indent=2)
+
+print(now, ': Data structure from the IO-Link master\n',data_json_formatted)
+
+# parsing JSON:
+# as you can see the above print,
+# 'value' is accesible in 'data' of the JSON data
+value = data_json['data']['value']
+
+# the raw measured value looks like 0000FC000002FF000000FF0000F6FF000026FF03
+# the length of the value is 40
+# this is byte array in 16-bit integer format
+print('raw measured value is', value)
+
+
+# Always, the returned value type from JSON is string
+# below is converting the value to v-Rms
+# description of v_rms variable is that
+# first, select first four elements from value
+# second, convert them into 16-bit integer
+# third, multiply 0.0001 to take the correct unit (m/s) and data
+# finally, rounding up and the data type is float
+v_rms = round(int(value[0:4], 16) * 0.0001)
+
+print('v_Rms =', v_rms ,'m/s')
+
+### indexing information is that
+# a_Peak data = value[8:12]
+# a_Rms data = value[16:20]
+# Temperature data = value[24:28]
+# Crest data = value[32:36]
+
+</code></pre>
+<hr/>
+<p>The sample code 2 (lab3_sample2.py) is given as above. This code is to print out v_Rms. Go through the code and run it. Based on the given code, perform the Tasks below.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h3 id="Task-3.2">Task 3.2<a class="anchor-link" href="#Task-3.2">¶</a></h3><p>Modify the sample code 2 on both laptop and Raspberry Pi to print out all data (v_Rms, a_Peak, a_Rms, Temperature, and Crest) as Table 4.</p>
+<ul>
+<li>Print the values with units in Table 4</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<hr/>
+<img alt="No description has been provided for this image" src="https://github.com/rd908213/ME-597-IIoT/blob/main/lab/lab3/img/L3_Task3.2_1.png?raw=true" width="100%"/>
+---
+
+
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<hr/>
+<img alt="No description has been provided for this image" src="https://github.com/rd908213/ME-597-IIoT/blob/main/lab/lab3/img/L3_Task3.2_2.png?raw=true" width="100%"/>
+---
+
+
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h3 id="Task-3.3">Task 3.3<a class="anchor-link" href="#Task-3.3">¶</a></h3><ol>
+<li>Perform the same as Task 2.3; Modify sample code 2 to collect IO-Link data for at least 1 minute and save data as a CSV file.</li>
+</ol>
+<ul>
+<li>You can use one computer either laptop or Raspberry Pi.</li>
+<li>Set the sampling period 1 second.</li>
+<li>Data (header) should include time or datetime, v_Rms, a_Peak, a_Rms, Temperature, Crest as Table 5.</li>
+<li>As a practice, plot data and calculate time-domain features.</li>
+</ul>
+<p><em>Table 5 Example data of output CSV file for Task 3.3</em></p>
+<table width="100%">
+<thead>
+<tr>
+<th>Time [sec]</th>
+<th>v_Rms [m/s]</th>
+<th>a_Peak [m/s2]</th>
+<th>a_Rms [m/s2]</th>
+<th>Temperature [C]</th>
+<th>Crest [-]</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center" colspan="6">...</td>
+</tr>
+<tr>
+<td>10.254</td>
+<td>0.001</td>
+<td>1.24</td>
+<td>0.48</td>
+<td>24.1</td>
+<td>2.58</td>
+</tr>
+<tr>
+<td>10.461</td>
+<td>0.002</td>
+<td>1.34</td>
+<td>0.51</td>
+<td>23.9</td>
+<td>2.63</td>
+</tr>
+<tr>
+<td align="center" colspan="6">...</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
@@ -7630,13 +7832,74 @@ Things (IIoT) implementations. In Lab3, we will collect data from two IoT device
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [5]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [12]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">YouTubeVideo</span>
-<span class="n">YouTubeVideo</span><span class="p">(</span><span class="s1">'txi2p5_OjKU'</span><span class="p">)</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1">### Place your entire code for Task 3.3 Here</span>
+<span class="c1"># If you want, you can add more code block below to load csv file and plot it.</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
-<span class="c1">#Watch this video to answer question 1.</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">IOLinkMaster</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">url</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"code"</span><span class="p">:</span> <span class="s2">"request"</span><span class="p">,</span>
+            <span class="s2">"cid"</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+            <span class="s2">"adr"</span><span class="p">:</span> <span class="s2">"/iolinkmaster/port[1]/iolinkdevice/iolreadacyclic"</span><span class="p">,</span>
+            <span class="s2">"data"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"index"</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span> <span class="s2">"subindex"</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
+        <span class="n">data_json</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">data_json</span><span class="p">[</span><span class="s2">"data"</span><span class="p">][</span><span class="s2">"value"</span><span class="p">]</span>
+        <span class="n">v_rms</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.0001</span><span class="p">)</span>
+        <span class="n">a_peak</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">8</span><span class="p">:</span><span class="mi">12</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.1</span><span class="p">)</span>
+        <span class="n">a_rms</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">16</span><span class="p">:</span><span class="mi">20</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.1</span><span class="p">)</span>
+        <span class="n">temperature</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">24</span><span class="p">:</span><span class="mi">28</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.1</span><span class="p">)</span>
+        <span class="n">crest</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">32</span><span class="p">:</span><span class="mi">36</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">v_rms</span><span class="p">,</span> <span class="n">a_peak</span><span class="p">,</span> <span class="n">a_rms</span><span class="p">,</span> <span class="n">temperature</span><span class="p">,</span> <span class="n">crest</span>
+
+
+<span class="n">URL</span> <span class="o">=</span> <span class="s2">"http://10.165.67.146/"</span>
+<span class="n">INPUTS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">"v_Rms [m/s]"</span><span class="p">,</span>
+    <span class="s2">"a_Peak [m/s^2]"</span><span class="p">,</span>
+    <span class="s2">"a_Rms [m/s^2]"</span><span class="p">,</span>
+    <span class="s2">"Temperature [C]"</span><span class="p">,</span>
+    <span class="s2">"Crest [-]"</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"Time [s]"</span><span class="p">]</span> <span class="o">+</span> <span class="n">INPUTS</span><span class="p">)</span>
+
+<span class="n">iolink_master</span> <span class="o">=</span> <span class="n">IOLinkMaster</span><span class="p">(</span><span class="n">URL</span><span class="p">)</span>
+<span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="k">while</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span> <span class="o">&lt;</span> <span class="mi">60</span><span class="p">:</span>
+    <span class="n">v_rms</span><span class="p">,</span> <span class="n">a_peak</span><span class="p">,</span> <span class="n">a_rms</span><span class="p">,</span> <span class="n">temperature</span><span class="p">,</span> <span class="n">crest</span> <span class="o">=</span> <span class="n">iolink_master</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span>
+    <span class="n">current_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">"Time [s]"</span><span class="p">:</span> <span class="n">current_time</span><span class="p">,</span>
+        <span class="s2">"v_Rms [m/s]"</span><span class="p">:</span> <span class="n">v_rms</span><span class="p">,</span>
+        <span class="s2">"a_Peak [m/s^2]"</span><span class="p">:</span> <span class="n">a_peak</span><span class="p">,</span>
+        <span class="s2">"a_Rms [m/s^2]"</span><span class="p">:</span> <span class="n">a_rms</span><span class="p">,</span>
+        <span class="s2">"Temperature [C]"</span><span class="p">:</span> <span class="n">temperature</span><span class="p">,</span>
+        <span class="s2">"Crest [-]"</span><span class="p">:</span> <span class="n">crest</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">"Time: </span><span class="si">{</span><span class="n">current_time</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> s, v_Rms: </span><span class="si">{</span><span class="n">v_rms</span><span class="si">}</span><span class="s2"> m/s, a_Peak: </span><span class="si">{</span><span class="n">a_peak</span><span class="si">}</span><span class="s2"> m/s^2, a_Rms: </span><span class="si">{</span><span class="n">a_rms</span><span class="si">}</span><span class="s2"> m/s^2, Temperature: </span><span class="si">{</span><span class="n">temperature</span><span class="si">}</span><span class="s2"> C, Crest: </span><span class="si">{</span><span class="n">crest</span><span class="si">}</span><span class="s2">"</span>
+    <span class="p">)</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+
+<span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">"iolink_data</span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">'%Y%m</span><span class="si">%d</span><span class="s1">_%H%M%S'</span><span class="p">)</span><span class="si">}</span><span class="s2">.csv"</span><span class="p">,</span>
+    <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -7646,35 +7909,40 @@ Things (IIoT) implementations. In Lab3, we will collect data from two IoT device
 <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[5]:</div>
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
-<iframe allowfullscreen="" frameborder="0" height="300" src="https://www.youtube.com/embed/txi2p5_OjKU" width="400"></iframe>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Time: 1.79 s, v_Rms: 0 m/s, a_Peak: 0 m/s^2, a_Rms: 0 m/s^2, Temperature: 28 C, Crest: 4
+Time: 2.89 s, v_Rms: 0 m/s, a_Peak: 0 m/s^2, a_Rms: 0 m/s^2, Temperature: 28 C, Crest: 4
+Time: 5.92 s, v_Rms: 0 m/s, a_Peak: 0 m/s^2, a_Rms: 0 m/s^2, Temperature: 28 C, Crest: 4
+Time: 8.70 s, v_Rms: 0 m/s, a_Peak: 0 m/s^2, a_Rms: 0 m/s^2, Temperature: 28 C, Crest: 4
+Time: 9.79 s, v_Rms: 0 m/s, a_Peak: 0 m/s^2, a_Rms: 0 m/s^2, Temperature: 28 C, Crest: 4
+Time: 12.82 s, v_Rms: 0 m/s, a_Peak: 0 m/s^2, a_Rms: 0 m/s^2, Temperature: 28 C, Crest: 5
+Time: 13.92 s, v_Rms: 0 m/s, a_Peak: 0 m/s^2, a_Rms: 0 m/s^2, Temperature: 28 C, Crest: 4
+Time: 15.01 s, v_Rms: 0 m/s, a_Peak: 0 m/s^2, a_Rms: 0 m/s^2, Temperature: 28 C, Crest: 4
+Time: 16.10 s, v_Rms: 0 m/s, a_Peak: 0 m/s^2, a_Rms: 0 m/s^2, Temperature: 28 C, Crest: 4
+Time: 17.19 s, v_Rms: 0 m/s, a_Peak: 0 m/s^2, a_Rms: 0 m/s^2, Temperature: 28 C, Crest: 4
+Time: 18.28 s, v_Rms: 0 m/s, a_Peak: 0 m/s^2, a_Rms: 0 m/s^2, Temperature: 28 C, Crest: 4
+Time: 21.31 s, v_Rms: 0 m/s, a_Peak: 0 m/s^2, a_Rms: 0 m/s^2, Temperature: 28 C, Crest: 4
+Time: 22.40 s, v_Rms: 0 m/s, a_Peak: 0 m/s^2, a_Rms: 0 m/s^2, Temperature: 28 C, Crest: 4
+Time: 25.43 s, v_Rms: 0 m/s, a_Peak: 0 m/s^2, a_Rms: 0 m/s^2, Temperature: 28 C, Crest: 4
+Time: 28.21 s, v_Rms: 0 m/s, a_Peak: 0 m/s^2, a_Rms: 0 m/s^2, Temperature: 28 C, Crest: 4
+Time: 30.99 s, v_Rms: 0 m/s, a_Peak: 0 m/s^2, a_Rms: 0 m/s^2, Temperature: 28 C, Crest: 5
+Time: 33.77 s, v_Rms: 0 m/s, a_Peak: 0 m/s^2, a_Rms: 0 m/s^2, Temperature: 28 C, Crest: 4
+Time: 36.56 s, v_Rms: 0 m/s, a_Peak: 0 m/s^2, a_Rms: 0 m/s^2, Temperature: 28 C, Crest: 4
+Time: 39.34 s, v_Rms: 0 m/s, a_Peak: 0 m/s^2, a_Rms: 0 m/s^2, Temperature: 28 C, Crest: 4
+Time: 42.12 s, v_Rms: 0 m/s, a_Peak: 0 m/s^2, a_Rms: 0 m/s^2, Temperature: 28 C, Crest: 4
+Time: 43.21 s, v_Rms: 0 m/s, a_Peak: 0 m/s^2, a_Rms: 0 m/s^2, Temperature: 28 C, Crest: 4
+Time: 46.24 s, v_Rms: 0 m/s, a_Peak: 0 m/s^2, a_Rms: 0 m/s^2, Temperature: 28 C, Crest: 4
+Time: 49.03 s, v_Rms: 0 m/s, a_Peak: 0 m/s^2, a_Rms: 0 m/s^2, Temperature: 28 C, Crest: 4
+Time: 50.19 s, v_Rms: 0 m/s, a_Peak: 0 m/s^2, a_Rms: 0 m/s^2, Temperature: 28 C, Crest: 4
+Time: 53.26 s, v_Rms: 0 m/s, a_Peak: 0 m/s^2, a_Rms: 0 m/s^2, Temperature: 28 C, Crest: 4
+Time: 54.35 s, v_Rms: 0 m/s, a_Peak: 0 m/s^2, a_Rms: 0 m/s^2, Temperature: 28 C, Crest: 4
+Time: 57.38 s, v_Rms: 0 m/s, a_Peak: 0 m/s^2, a_Rms: 0 m/s^2, Temperature: 28 C, Crest: 4
+Time: 58.46 s, v_Rms: 0 m/s, a_Peak: 0 m/s^2, a_Rms: 0 m/s^2, Temperature: 28 C, Crest: 4
+Time: 61.50 s, v_Rms: 0 m/s, a_Peak: 0 m/s^2, a_Rms: 0 m/s^2, Temperature: 28 C, Crest: 4
+</pre>
 </div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h4 id="1)-Explain-what-is-Modbus-protocol?">1) Explain what is Modbus protocol?<a class="anchor-link" href="#1)-Explain-what-is-Modbus-protocol?">¶</a></h4>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<hr/>
-<p>Modbus is the oldest open automation communication protocol for industrial devices. It is most commonly used to facilitate Supervisory Control and Data Acquisition or SCADA. It is used as a common communication protocol for devices working together in a system even if they are made by different manufacturers. Modbus is designed based on a master-slave architecture. This means that a single master computer sends messages to its slaves, commonly sensors or other peripheral devices, and expects responses of either sensor readings or acknowledgement.</p>
-<hr/>
 </div>
 </div>
 </div>
@@ -7683,13 +7951,20 @@ Things (IIoT) implementations. In Lab3, we will collect data from two IoT device
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [2]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [13]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">YouTubeVideo</span>
-<span class="n">YouTubeVideo</span><span class="p">(</span><span class="s1">'YDbWt_wE3YE'</span><span class="p">)</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Plot data</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
-<span class="c1">#Watch this video to answer question 2.</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">INPUTS</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">INPUTS</span><span class="p">):</span>
+    <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"Time [s]"</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">col</span><span class="p">)</span>
+    <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Time [sec]"</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">"Power Meter Data Over Time"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -7699,35 +7974,11 @@ Things (IIoT) implementations. In Lab3, we will collect data from two IoT device
 <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[2]:</div>
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
-<iframe allowfullscreen="" frameborder="0" height="300" src="https://www.youtube.com/embed/YDbWt_wE3YE" width="400"></iframe>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedImage jp-OutputArea-output" tabindex="0">
+<img alt="No description has been provided for this image" class="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA90AAAXDCAYAAADNwl1XAAAAOnRFWHRTb2Z0d2FyZQBNYXRwbG90bGliIHZlcnNpb24zLjEwLjgsIGh0dHBzOi8vbWF0cGxvdGxpYi5vcmcvwVt1zgAAAAlwSFlzAAAPYQAAD2EBqD+naQAAzvlJREFUeJzs/QmUVNW5P+6/zejEICAgiiKRiIpDBEGMiRMRRcUxKiFOIZp4FRXUBBRBTW64Jtc4XFTiTdR4I5HgFAeCQTRiAnHAIaJiTBxAkMmBVpBB6N/a5/uv/ndjg93YR+iu51nrrO46dc6pfYoS/NTe+90lZWVlZQEAAADUuga1f0kAAABA6AYAAIAc6ekGAACAnAjdAAAAkBOhGwAAAHIidAMAAEBOhG4AAADIidANAAAAORG6AQAAICdCNwBAFW6//fYoKSmJt956y/sDwAYTugHqeWAobJtttll89atfjfPOOy8WLFgQdd1BBx2U3VeXLl2qfH7y5Mnl93733XfX+Prz5s2LK664Il544YX4svzlL3+p9GfWtGnTaNeuXXavP/vZz2LRokUbfO1XXnklu5+8AuTLL78c3/3ud2O77bbL2t2hQ4cYOHBgtn9T/Nx83pbeKwCoDY1q5SoAbLKuuuqq2GmnnWL58uXx17/+NW6++eaYOHFizJw5M7bYYouoy9IXCf/617/i6aefjp49e1Z67s4778yeT/e9IVLovvLKK6NTp06x9957x5fp/PPPj3333TdWr16dBe1p06bFqFGj4pe//GX84Q9/iEMOOWSDQne6nxQ60z3VpnvvvTcGDBgQrVq1ikGDBmWftxTuf/Ob32RfeNx1111x3HHHxabgsssui+9///vlj5955pm44YYb4tJLL41dd921fP+ee+4Zu+++e5xyyinZlwgAsKGEboB67ogjjogePXpkv6ew0bp16yy8/fGPf8yC0qZqzZo1sXLlyiw4r8tXvvKV+PTTT+P3v/99pdCdgvZ9990XRx55ZNxzzz2xKVm6dGlsueWW6z3mG9/4Rpx44omV9r344otx2GGHxQknnJAF6G233TY2Bf/+97/j1FNPjc6dO8fUqVNjm222KX/uggsuyO4lPf+Pf/wjO2Zjv8/f+ta3Kj1On68UutP+9IXE2ho2bJhrOwGo/wwvBygyhV7SN998M/uZQutPfvKTLMCmHr3UC5p6/VasWFF+ztChQ7OwXlZWVr5v8ODB2TDcFFgK0rD1tC/1phek66Re2p133jm7fseOHeNHP/pRpesn6bw09D31UKcexnTspEmTPvd+0hcH48ePz0J6wYMPPhjLli2Lk046qcpz5s6dG9/73veyodvpddLr3XrrrZWGeaee5uTMM88sH3KchuwXPPXUU3H44YdHixYtshEDBx54YPztb3+r9DppiHI6L4Xk73znO7H11lvHAQccEBtir732iuuuuy4+/PDDGDNmTPn+t99+O/7jP/4jdtlll9h8882zP6dvf/vblYaRp3anfcnBBx9cfj/pPpP0BUz6giINCU/vR/ospM9E6mn/PL/4xS+y9/qWW26pFLiTNm3axK9+9assAP/85z/P9qWe7/TaTzzxxGeulY5Nz6VRGAWzZs3KvoBIvegpIKcvkB544IEqp1Kka6b3om3btrH99ttHHnO6038fRx11VPbepbak93yPPfYofy9Tr396nNravXv3eP755z9z3ercEwD1h9ANUGRSz2SSwlmh93vkyJGxzz77xLXXXpuFx9GjR2fDagtSb+X7779faX7uk08+GQ0aNMh+VtyXfPOb38x+piDcv3//+O///u84+uij43/+53/i2GOPzV7n5JNP/kzbHnvssRgyZEj23PXXX1+tYdApzL777rvloScZN25cHHrooVn4Wlv6YmC//faLRx99NAv56XXSFwJpWHQKtUkaZpyG5Sdnn312/N///V+2Fe4rtTP9Xlpamn2hkOZbpzCcvtBIQ93XlgJvCqbpuLPOOis2VApqKeT9+c9/rjQ8Og0/T39e6QuQH/7whzFlypSs1za9ZpLamoasJ+kLlcL9FIZTp3C51VZbZV+upPcjhcX0mRg2bNjntil9wZH+nNJnpCrptdPzDz/8cPY4hfv0WmmY/NrSlyfpC5Bu3bplj9PnLf1Zvfrqq1lbrrnmmqz3On2G0kiGtaXAnb7gqG7bN1Sa0pA+d+kznf5b+eCDD7Lf0xdG6fOb5ranofzpv7X0xU/FL4Rqek8A1ANlANRLt912W+qWLnv00UfLFi1aVDZnzpyyu+66q6x169Zlm2++edk777xT9sILL2THfP/736907sUXX5ztf+yxx7LHCxcuzB7fdNNN2eMPP/ywrEGDBmXf/va3y9q1a1d+3vnnn1/WqlWrsjVr1mSP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T/m+Bg0aZI+nT59e5Tlpf8Xjk9QzXvH4NWvWxKmnnpoF89133z3HOwAAAKDYNIo6YvHixbF69epo165dpf3p8axZs6o8Z/78+VUen/YXXH311dGoUaM4//zzq92WFStWZFtBaWlpDe4EAACAYlFnerrzkHrO0xD022+/PSugVl2jR4+OFi1alG8dO3bMtZ0AAADUTXUmdLdp0yYaNmwYCxYsqLQ/PW7fvn2V56T96zv+ySefzIqw7bDDDllvd9refvvtuOiii7IK6esyfPjwWLJkSfk2Z86cWrlHAAAA6pc6E7qbNGkS3bt3jylTplSaj50e9+7du8pz0v6KxyeTJ08uPz7N5f7HP/4RL7zwQvmWqpen+d2PPPLIOtvStGnTaN68eaUNAAAA6uyc7iQtF3b66adHjx49omfPntl62kuXLs2qmSennXZabLfddtnw7+SCCy6IAw88MK655po48sgj46677opnn302brnlluz51q1bZ1tFqXp56gnfZZddNsIdAgAAUJ/UqdB98sknx6JFi2LkyJFZMbS99947Jk2aVF4sbfbs2VlF84L9998/xo0bFyNGjIhLL700unTpEvfff39069ZtI94FAAAAxaKkrKysbGM3oq5L1ctTQbU0v9tQcwAAgPqvtJo5sM7M6QYAAIC6RugGAACAnAjdAAAAkBOhGwAAAHIidAMAAEBOhG4AAADIidANAAAAORG6AQAAICdCNwAAAORE6AYAAICcCN0AAACQE6EbAAAAciJ0AwAAQE6EbgAAAMiJ0A0AAAA5EboBAAAgJ0I3AAAA5EToBgAAgJwI3QAAAJAToRsAAAByInQDAABAToRuAAAAyInQDQAAADkRugEAACAnQjcAAADkROgGAACAnAjdAAAAkBOhGwAAAHIidAMAAEBOhG4AAADIidANAAAAORG6AQAAICdCNwAAAORE6AYAAICcCN0AAACQE6EbAAAAclLnQveNN94YnTp1is022yx69eoVTz/99HqPnzBhQnTt2jU7fo899oiJEyeWP7dq1ar48Y9/nO3fcssto0OHDnHaaafFvHnzvoQ7AQAAoL6rU6F7/PjxMXTo0Bg1alQ899xzsddee0Xfvn1j4cKFVR4/bdq0GDBgQAwaNCief/75OPbYY7Nt5syZ2fPLli3LrnP55ZdnP++999547bXXon///l/ynQEA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Im699dYqj7/++uvj8MMPj0suuSR23XXX+MlPfhL77LNPjBkzptJxc+fOjcGDB8edd94ZjRs3/pLuBgAAgPquzoTulStXxowZM6JPnz7l+xo0aJA9nj59epXnpP0Vj09Sz3jF49esWROnnnpqFsx33333HO8AAACAYtMo6ojFixfH6tWro127dpX2p8ezZs2q8pz58+dXeXzaX3D11VdHo0aN4vzzz692W1asWJFtBaWlpTW4EwAAAIpFnenpzkPqOU9D0G+//fasgFp1jR49Olq0aFG+dezYMdd2AgAAUDfVmdDdpk2baNiwYSxYsKDS/vS4ffv2VZ6T9q/v+CeffDIrwrbDDjtkvd1pe/vtt+Oiiy7KKqSvy/Dhw2PJkiXl25w5c2rlHgEAAKhf6kzobtKkSXTv3j2mTJlSaT52ety7d+8qz0n7Kx6fTJ48ufz4NJf7H//4R7zwwgvlW6penuZ3P/LII+tsS9OmTaN58+aVNgAAAKizc7qTtFzY6aefHj169IiePXtm62kvXbo0q2aenHbaabHddttlw7+TCy64IA488MC45ppr4sgjj4y77rornn322bjllluy51u3bp1tFaXq5aknfJdddtkIdwgAAEB9UqdC98knnxyLFi2KkSNHZsXQ9t5775g0aVJ5sbTZs2dnFc0L9t9//xg3blyMGDEiLr300ujSpUvcf//90a1bt414FwAAABSLkrKysrKN3Yi6LlUvTwXV0vxuQ80BAADqv9Jq5sA6M6cbAAAA6hqhGwAAAHIidAMAAEBOhG4AAADIidANAAAAORG6AQAAICdCNwAAAORE6AYAAICcCN0AAACQE6EbAAAAciJ0AwAAQE6EbgAAAMiJ0A0AAAA5EboBAAAgJ0I3AAAA5EToBgAAgJwI3QAAAJAToRsAAAByInQDAABAToRuAAAAyInQDQAAADkRugEAACAnQjcAAADkROgGAACAnAjdAAAAkBOhGwAAAHIidAMAAEBOhG4AAADIidANAAAAORG6AQAAICdCNwAAAORE6AYAAICcCN0AAACQE6EbAAAAciJ0AwAAQE4aVeegoUOH1vjCI0aMiFatWm1ImwAAAKBeKCkrKyv7vIMaNGgQvXv3jiZNmlTron/961/jtddei86dO0cxKC0tjRYtWsSSJUuiefPmG7s5AAAAbCI5sFo93cl9990Xbdu2rdaxzZo1i7zceOON8Ytf/CLmz58fe+21V/zP//xP9OzZc53HT5gwIS6//PJ46623okuXLnH11VdHv379sudWrVqV9chPnDgx3njjjewN69OnT/zXf/1XdOjQIbd7AAAAoDhUa073bbfdlgXS6vrVr34V7dq1i9o2fvz4bKj7qFGj4rnnnstCd9++fWPhwoVVHj9t2rQYMGBADBo0KJ5//vk49thjs23mzJnZ88uWLcuuk0J5+nnvvfdmPfT9+/ev9bYDAABQfKo1vHxT0atXr9h3331jzJgx2eM1a9ZEx44dY/DgwTFs2LDPHH/yySfH0qVL46GHHirft99++8Xee+8dY8eOrfI1nnnmmazn/O23344ddtihWu0yvBwAAKC4lFZzeHmdqV6+cuXKmDFjRjb8u+Jc8/R4+vTpVZ6T9lc8Pkk94+s6PklvWElJSbRs2XKdx6xYsSJ7gytuAAAA8IVC90033ZSF2JNOOimmTJlS6bnFixfnWjgtXX/16tWfGbaeHqf53VVJ+2ty/PLly+PHP/5xNiR9fd9UjB49OvtGo7Cl3nYAAADY4NB9ww03xCWXXBJdu3aNpk2bZsXIUvgsSIE4Dcmuq1JRtfRlQhptf/PNN6/32OHDh2c94oVtzpw5X1o7AQAAqDsa1aQ42v/+7//Gd77znezxOeeckxUl++STT+Kqq66KvLVp0yYaNmwYCxYsqLQ/PW7fvn2V56T91Tm+ELjTlwaPPfbY5y77lb50SBsAAADUSk/3m2++Gfvvv3/54/R7Cqi33HJL1vObt7RGePfu3SsNa0+F1NLjtIZ4VdL+tYfBT548udLxhcD9+uuvx6OPPhqtW7fO8S4AAAAoJo1q0tOchlF36tSpfF+3bt2y4H3IIYfEvHnzIm9pubDTTz89evTokVUYv+6667Lq5GeeeWb2/GmnnRbbbbdd+bD3Cy64IA488MC45ppr4sgjj4y77rornn322eyLgkLgPvHEE7PlwlKF8zREvjDfu1WrVlnQBwAAgNxD9wEHHJCtY/2Nb3yj0v7ddtst600++OCDI29pCbBFixbFyJEjs3Cclv6aNGlSebG02bNnZxXNK/bGjxs3LkaMGBGXXnppdOnSJe6///7sy4Jk7ty58cADD2S/p2tV9Pjjj8dBBx2U+z0BAABQf1V7ne5//OMf2ZJdhV7ltc2cOTPuueeeGDVqVBQb63QDAAAUl9JqrtNd7dDNF3+zAQAAKK4cWKN1ugEAAIDqq3HovvDCC2t6CgAAABSlahdSS5W9zzjjjPjXv/6Vb4sAAACgmEL38uXL4/jjj4933303q+oNAAAA1FLo7tOnT7z//vvxxBNPRMuWLatzCgAAABS9as3pnjZtWpx77rmxzTbbFP0bBgAAALUauq+//vq4+OKL4+GHH672hQEAAKDYVWt4+eDBg6NVq1bxne98J+6777445JBD8m8ZAAAAFEv18oEDB8bWW28dAwYMiAULFuTbKgAAACi2dbr79euX9XQDAAAAtRy6k/3337+mpwAAAEBRqnHoXtvq1avjhRdeiA8++KB2WgQAAAD1RI1D94UXXhi/+c1vygP3gQceGPvss0907Ngx/vKXv+TRRgAAACiO0H333XfHXnvtlf3+4IMPxptvvhmzZs2KIUOGxGWXXZZHGwEAAKA4QvfixYujffv22e8TJ06Mb3/72/HVr341vve978VLL72URxsBAACgOEJ3u3bt4pVXXsmGlk+aNCm+9a1vZfuXLVsWDRs2zKONAAAAUL/X6S4488wz46STToptt902SkpKok+fPtn+p556Krp27ZpHGwEAAKA4QvcVV1wR3bp1izlz5mRDy5s2bZrtT73cw4YNy6ONAAAAUCeVlJWVlVXnwNNOOy2OOeaY6Nu3b2y11Vb5t6wOKS0tjRYtWsSSJUuiefPmG7s5AAAAbCI5sNpzunfeeef42c9+Fttss00cccQRcfPNN8fcuXNrq70AAABQvD3dBe+880488MAD8cc//jGeeOKJ2H333bMe8P79+8fee+8dxUhPNwAAQHEprWZPd41Dd0UfffRR/OlPf8oCePrZrFmzOProo+Occ87JwnixELoBAACKS2ltDy+vSgrZqZL5nXfeGYsWLYpbb701K6g2ffr0L3JZAAAAqBe+UE83/4+ebgAAgOJSWs2e7hovGfbee+/FyJEj4/HHH4+FCxfGmjVrKj3//vvvb1iLAQAAoJ6pceg+9dRT41//+lcMGjQo2rVrFyUlJfm0DAAAAIotdD/55JPx17/+Nfbaa698WgQAAAD1RI0LqXXt2jU++eSTfFoDAAAAxRy6b7rpprjsssuyNbrT/O40ebziBgAAAGzg8PKWLVtm4fqQQw6ptD8VQU/zu1evXl3TSwIAAEC9VOPQPXDgwGjcuHGMGzdOITUAAACozdA9c+bMeP7552OXXXap6akAAABQVGo8p7tHjx4xZ86cfFoDAAAAxdzTPXjw4LjgggvikksuiT322CMbal7RnnvuWZvtAwAAgDqrpCxVQKuBBg0+2zmeCqgVcyG1VFiuRYsWsWTJkmjevPnGbg4AAACbSA6s8fDyN9988zPbG2+8Uf4zbzfeeGN06tQpNttss+jVq1c8/fTT6z1+woQJ2dri6fjUMz9x4sRKz6cvC0aOHBnbbrttbL755tGnT594/fXXc74LAAAAikGNQ/eOO+643i1P48ePj6FDh8aoUaPiueeei7322iv69u0bCxcurPL4adOmxYABA2LQoEFZ8bdjjz0221IxuIKf//znccMNN8TYsWPjqaeeii233DK75vLly3O9FwAAAOq/ag0vf+CBB+KII474zPztdUm9yQcffHDWc1ybUs/2vvvuG2PGjMker1mzJjp27JjNMx82bNhnjj/55JNj6dKl8dBDD5Xv22+//WLvvffOQna69Q4dOsRFF10UF198cfZ8GhrQrl27uP322+OUU06pVrsMLwcAACgupdUcXl6tQmrHHXdczJ8/P7bZZptqvXgKqy+88EJ07tw5asvKlStjxowZMXz48Erzy9Nw8OnTp1d5TtqfesYrSr3Y999/f/Z7GhKf7itdoyC9aSncp3OrG7o3denLhU9WFd9cewAAoG7bvHHDrHZYXdaouqHtjDPOiKZNm1bronkMzV68eHFWpC31QleUHs+aNavKc1Kgrur4tL/wfGHfuo6pyooVK7Kt4jccm7IUuHcb+cjGbgYAAECNvHJV39iiSY0X3dqkVKv1p59+eo0uOnDgwHpdxXv06NFx5ZVXbuxmAAAAUB9C92233RYbW5s2baJhw4axYMGCSvvT4/bt21d5Ttq/vuMLP9O+VL284jFp3ve6pCHuFYetp57uNLd8Ux6Skb4hAgAAqEs2b9ww6ro600/fpEmT6N69e0yZMiWrQF4opJYen3feeVWe07t37+z5Cy+8sHzf5MmTs/3JTjvtlAXvdEwhZKcAnaqYn3POOetsSxpmX92h9puCNAeirg/JAAAAqIvqVBJLvctpqHuPHj2iZ8+ecd1112XVyc8888zs+dNOOy222267bPh3csEFF8SBBx4Y11xzTRx55JFx1113xbPPPhu33HJLeRhNgfynP/1pdOnSJQvhl19+eVbRvBDsAQAAoChCd1oCbNGiRTFy5Mis0FnqnZ40aVJ5IbTZs2dnFc0L9t9//xg3blyMGDEiLr300ixYp8rl3bp1Kz/mRz/6URbczz777Pjwww/jgAMOyK652WabbZR7BAAAoMjW6Wb9rNMNAABQXEqruU73/79buJreeeeddT7397//vaaXAwAAgHqrxqH7sMMOi/fff/8z+//2t7/F4YcfXlvtAgAAgOIL3fvtt18WvD/66KPyfVOnTo1+/frFqFGjart9AAAAUDyh+9e//nXssMMOcfTRR8eKFSvi8ccfzyqDX3XVVTFkyJB8WgkAAADFELpTdfC09Fbjxo3jkEMOif79+2dLdKXluQAAAIAaVi//xz/+8Zl9aXj5gAEDsl7uc845p3z/nnvuGcVG9XIAAIDiUlrN6uXVCt2pd7ukpCQqHlrxceH39HP16tVRbIRuAACA4lJazdDdqDoXe/PNN2uzbQAAAFAUqhW6d9xxx/xbAgAAAMUYuqvyyiuvxOzZs2PlypWV9qfCagAAAMAGhO433ngjjjvuuHjppZc+M687KcY53QAAAFArS4alpcF22mmnWLhwYWyxxRbx8ssvx9SpU6NHjx7xl7/8paaXAwAAgHqrxj3d06dPj8ceeyzatGmTVTVP2wEHHJCt1X3++efH888/n09LAQAAoL73dKfh482aNct+T8F73rx55cXWXnvttdpvIQAAABRLT3e3bt3ixRdfzIaY9+rVK37+859HkyZN4pZbbonOnTvn00oAAAAohtA9YsSIWLp0afb7VVddFUcddVR84xvfiNatW8f48ePzaCMAAADUSSVlhfLjX8D7778fW2+9dXkF82JTWloaLVq0iCVLlkTz5s03dnMAAADYRHJgjed0F/zrX/+KRx55JD755JNo1arVhl4GAAAA6q0ah+733nsvDj300PjqV78a/fr1i3fffTfbP2jQoLjooovyaCMAAAAUR+geMmRING7cOGbPnp2t011w8sknx6RJk2q7fQAAAFA8hdT+/Oc/Z8PKt99++0r7u3TpEm+//XZttg0AAACKq6c7VS6v2MNdsZha06ZNa6tdAAAAUHyhOy0Pdscdd5Q/ThXL16xZk63XffDBB9d2+wAAAKB4hpencJ0KqT377LOxcuXK+NGPfhQvv/xy1tP9t7/9LZ9WAgAAQDH0dHfr1i3++c9/xgEHHBDHHHNMNtz8+OOPj+effz6+8pWv5NNKAAAAqO893W+99VZMnjw5Vq1alQXuyy67LL+WAQAAQLGE7scffzyOOuqo+OSTT/7fiY0axa233hrf/e5382wfAAAA1P/h5Zdffnl861vfirlz58Z7770XZ511VjafGwAAAKhaSVlZWVlUQ8uWLWPatGmx2267ZY+XLVsWzZs3jwULFkTr1q2jmJWWlkaLFi1iyZIl2XsCAABA/VbdHNigJhds06ZN+eO0Vvfmm2+evQAAAADwBQupPfLII1mSL0jrc0+ZMiVmzpxZvq9///41uSQAAADUW9UeXt6gwed3ipeUlMTq1auj2BheDgAAUFxKqzm8vNo93alXGwAAAKi+as/prqkjjzwy3n333bwuDwAAAMUbuqdOnVq+pjcAAAAUo9xCNwAAABS7OhO633///Rg4cGA2QT2tGT5o0KD4+OOP13vO8uXL49xzz83WEd9qq63ihBNOyNYVL3jxxRdjwIAB0bFjx2z5s1133TWuv/76L+FuAAAAKAZ1JnSnwP3yyy/H5MmT46GHHsqGr5999tnrPWfIkCHx4IMPxoQJE+KJJ56IefPmxfHHH1/+/IwZM6Jt27bxu9/9Lrv2ZZddFsOHD48xY8Z8CXcEAABAfVftJcNqqlmzZllPcufOnb/wtV599dXYbbfd4plnnokePXpk+yZNmhT9+vWLd955Jzp06PCZc1LZ9m222SbGjRsXJ554YrZv1qxZWW/29OnTY7/99qvytVLPeHq9xx57rNrts2QYAABAcSmt5pJhdaKnO4XkNKS8ELiTPn36ZGuHP/XUU1Wek3qxV61alR1X0LVr19hhhx2y661LesNatWpVy3cAAABAMar2Ot01demll9ZaeJ0/f342DLyiRo0aZddPz63rnCZNmmRhvaJ27dqt85xp06bF+PHj4+GHH15ve1asWJFtFb/hAAAAgFoL3a+88krMnj07Vq5cWWl///79s59pbvTnGTZsWFx99dXrPSYN9f4yzJw5M4455pgYNWpUHHbYYes9dvTo0XHllVd+Ke0CAACgiEL3G2+8Eccdd1y89NJLUVJSEoUp4en3ZPXq1dW+1kUXXRRnnHHGeo9Jc8Lbt28fCxcurLT/008/zSqap+eqkvanLwQ+/PDDSr3dqXr52uekLxAOPfTQrDDbiBEjPrfd6QuFoUOHVurpThXQAQAA4AuF7gsuuCB22mmnmDJlSvbz6aefjvfeey8L0P/93/9do2ulQmdp+zy9e/fOwnOap929e/dsXyp0tmbNmujVq1eV56TjGjdunLUzLRWWvPbaa1nvfLpeQapafsghh8Tpp58e//mf/1mtdjdt2jTbAAAAoFarl7dp0yYLvHvuuWdWqS2F7l122SXbl4L3888/H3k44ogjsl7qsWPHZgXSzjzzzKywWqpOnsydOzfrrb7jjjuiZ8+e2b5zzjknJk6cGLfffntWTW7w4MHlc7cLQ8pT4O7bt2/84he/KH+thg0bVuvLgALVywEAAIpLaV7Vy9Pw8bQcWCGAp7Wvkx133DHrSc7LnXfemVUfT8E6LRV2wAEHxC233FL+fAri6fWXLVtWvu/aa6+No446Kuvp/uY3v5kNK7/33nvLn7/77rtj0aJF2Trd2267bfm277775nYfAAAAFI8a93R/4xvfyHq0jz322PjOd74TH3zwQTYPOgXgNPw79R4XGz3dAAAAxaW0mj3dNZ7TnQL20qVLs9+vuuqqrCc5BfHWrVtny20BAAAAG9jTXZVURXzrrbcur2BebPR0AwAAFJfSvHq6q9KqVavauAwAAADUKzUupAYAAABUj9ANAAAAORG6AQAAICdCNwAAAORE6AYAAICcCN0AAACQE6EbAAAAciJ0AwAAQE6EbgAAAMiJ0A0AAAA5EboBAAAgJ0I3AAAA5EToBgAAgJwI3QAAAJAToRsAAAByInQDAABAToRuAAAAyInQDQAAADkRugEAACAnQjcAAADkROgGAACAnAjdAAAAkBOhGwAAAHIidAMAAEBOhG4AAADIidANAAAAORG6AQAAICdCNwAAAORE6AYAAICcCN0AAACQE6EbAAAAciJ0AwAAgNANAAAAdYuebgAAACj20P3+++/HwIEDo3nz5tGyZcsYNGhQfPzxx+s9Z/ny5XHuuedG69atY6uttooTTjghFixYUOWx7733Xmy//fZRUlISH374YU53AQAAQDGpM6E7Be6XX345Jk+eHA899FBMnTo1zj777PWeM2TIkHjwwQdjwoQJ8cQTT8S8efPi+OOPr/LYFOL33HPPnFoPAABAMSopKysri03cq6++Grvttls888wz0aNHj2zfpEmTol+/fvHOO+9Ehw4dPnPOkiVLYptttolx48bFiSeemO2bNWtW7LrrrjF9+vTYb7/9yo+9+eabY/z48TFy5Mg49NBD44MPPsh606urtLQ0WrRokb1m6okHAACgfqtuDqwTPd0pJKcQXAjcSZ8+faJBgwbx1FNPVXnOjBkzYtWqVdlxBV27do0ddtghu17BK6+8EldddVXccccd2fWqY8WKFdkbXHEDAACAOhm658+fH23btq20r1GjRtGqVavsuXWd06RJk8/0WLdr1678nBSeBwwYEL/4xS+yMF5do0ePzr7RKGwdO3bcoPsCAACgftuooXvYsGFZ4bL1bWlIeF6GDx+eDTf/7ne/W+Pz0hCCwjZnzpzc2ggAAEDd1WhjvvhFF10UZ5xxxnqP6dy5c7Rv3z4WLlxYaf+nn36aVTRPz1Ul7V+5cmVWibxib3eqXl4457HHHouXXnop7r777uxxYXp7mzZt4rLLLosrr7yyyms3bdo02wAAAGCTDd2p0FnaPk/v3r2z8JzmaXfv3r08MK9ZsyZ69epV5TnpuMaNG8eUKVOypcKS1157LWbPnp1dL7nnnnvik08+KT8nFWr73ve+F08++WR85StfqaW7BAAAoFht1NBdXWkI+OGHHx5nnXVWjB07NiuQdt5558Upp5xSXrl87ty5WeXxVBCtZ8+e2VzrtAzY0KFDs7nfqZrc4MGDs8BdqFy+drBevHhx+evVpHo5AAAA1NnQndx5551Z0E7BOlUZT73XN9xwQ/nzKYinnuxly5aV77v22mvLj01F0/r27Rs33XTTRroDAAAAik2dWKd7U2edbgAAgOJSWp/W6QYAAIC6SOgGAACAnAjdAAAAkBOhGwAAAHIidAMAAEBOhG4AAADIidANAAAAORG6AQAAICdCNwAAAORE6AYAAICcCN0AAACQE6EbAAAAciJ0AwAAQE6EbgAAAMiJ0A0AAAA5EboBAAAgJ0I3AAAA5EToBgAAgJwI3QAAAJAToRsAAAByInQDAABAToRuAAAAyInQDQAAADkRugEAACAnQjcAAADkROgGAACAnAjdAAAAkBOhGwAAAHLSKK8LF5OysrLsZ2lp6cZuCgAAAF+CQv4r5MF1EbprwUcffZT97NixY21cDgAAgDqUB1u0aLHO50vKPi+W87nWrFkT8+bNi2bNmkVJSckGfUOSAvucOXOiefPm3nF8RvD3CLXKvzP4jODvEfJWjP/WlJWVZYG7Q4cO0aDBumdu6+muBekN3n777b/wddKHs1g+oGwYnxF8Rvgi/B2CzwhflL9H8BmpbH093AUKqQEAAEBOhG4AAADIidC9CWjatGmMGjUq+wk+I/h7BP/O4P9F2NT4/1V8RjacQmoAAACQEz3dAAAAkBOhGwAAAHIidAMAAEBOhG4AAADIidANAAAAORG6AQAAICdCNwAAAORE6AYAAICcCN0AAACQE6EbAAAAciJ0AwAAQE6EbgAAAMiJ0A0AAAA5EboBAAAgJ0I3AAAA5KRRXhcuJmvWrIl58+ZFs2bNoqSkZGM3BwAAgJyVlZXFRx99FB06dIgGDdbdny1014IUuDt27FgblwIAAKAOmTNnTmy//fbrfF7orgWph7vwZjdv3rw2LgkAAMAmrLS0NOt8LeTBdRG6a0FhSHkK3EI3AABA8Sj5nCnGCqkBAABAToRuAAAAyInQDQAAADkRugEAACAnQjcAAADkROgGAACAnAjdAAAAkBOhGwAAAHIidAMAAEBOhG4AAADIidANAAAAORG6AQAAICdCNwAAAORE6AYAAICcCN0AAACQE6EbAAAAciJ0AwAAQE6EbgAAAMiJ0A0AAAA5EboBAAAgJ0I3AAAA5EToBgAAgJwI3QAAAJAToRsAAAByInQDAABAToRuAAAAyInQDQAAADkRugEAACAndS5033jjjdGpU6fYbLPNolevXvH000+v9/gJEyZE165ds+P32GOPmDhx4jqP/eEPfxglJSVx3XXX5dByAAAAik2dCt3jx4+PoUOHxqhRo+K5556LvfbaK/r27RsLFy6s8vhp06bFgAEDYtCgQfH888/Hsccem20zZ878zLH33Xdf/P3vf48OHTp8CXcCAABAMahTofuXv/xlnHXWWXHmmWfGbrvtFmPHjo0tttgibr311iqPv/766+Pwww+PSy65JHbdddf4yU9+Evvss0+MGTOm0nFz586NwYMHx5133hmNGzf+ku4GAACA+q7OhO6VK1fGjBkzok+fPuX7GjRokD2ePn16leek/RWPT1LPeMXj16xZE6eeemoWzHffffdqtWXFihVRWlpaaQMAAIA6G7oXL14cq1evjnbt2lXanx7Pnz+/ynPS/s87/uqrr45GjRrF+eefX+22jB49Olq0aFG+dezYscb3AwAA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gbHNNtvEWWedlX+rAAAAoFhC93HHHRcPP/xwHH/88dkw8+985zv5twwAAACKpXr5wQcfHI8++mhccskl+bYIAAAAinGd7u7du8fjjz+eX2sAAACgWEN38tWvfjWflgAAAECxh+61lZaWZkuJvfrqq7XTIgAAACjW0H3SSSfFmDFjst8/+eST6NGjR7Zvzz33jHvuuSePNgIAAEBxhO6pU6fGN77xjez3++67L8rKyuLDDz+MG264IX7605/m0UYAAAAojtC9ZMmSaNWqVfb7pEmT4oQTTogtttgijjzyyHj99dfzaCMAAAAUR+ju2LFjTJ8+PZYuXZqF7sMOOyzb/8EHH8Rmm22WRxsBAACgTmpU0xMuvPDCGDhwYGy11Vax4447xkEHHVQ+7HyPPfbIo40AAABQHKH7P/7jP6Jnz54xZ86c+Na3vhUNGvy/zvLOnTub0w0AAAAVlJSlSmjVkIqnHXPMMdnWpUuX6pxSNNKyaS1atMjmuzdv3nxjNwcAAIBNJAdWe073WWedlc3l3meffWLXXXeNH//4x/G3v/0tq14OAAAAfIGe7oIVK1bElClT4o9//GM8+OCDsXr16qxyef/+/aNv376x+eabR7HR0w0AAFBcSmu7p7ugadOm0a9fv/jVr34V8+bNiwceeCC23XbbuPzyy6N169Zx1FFHZT3gAAAAUOxq3NO9Pv/+97+zEJ6WFTvxxBOjWOjpBgAAKC6l1ezp/kKh++OPP441a9ZU2leMhcSEbgAAgOJSmtfw8jfffDObw73llltmL7D11ltnW8uWLbOfAAAAwAau0/3d7343q1h+6623Rrt27aKkpKSmlwAAAICiUOPQ/eKLL8aMGTNil112yadFAAAAUE/UeHj5vvvuG3PmzMmnNQAAAFDMPd2//vWv44c//GHMnTs3unXrFo0bN670/J577lmb7QMAAIDiCd2LFi3KlgY788wzy/eled1pnnf6uXr16tpuIwAAABRH6P7e974XX/va1+L3v/+9QmoAAABQm6H77bffjgceeCB23nnnmp4KAAAARaXGhdQOOeSQrII5AAAAUMuh++ijj44hQ4bEFVdcEffcc0/W611xy9uNN94YnTp1is022yx69eoVTz/99HqPnzBhQnTt2jU7fo899oiJEydWej7NRR85cmRsu+22sfnmm0efPn3i9ddfz/kuAAAAKAYlZSl11kCDBuvO6XkXUhs/fnycdtppMXbs2CxwX3fddVmofu2116Jt27afOX7atGnxzW9+M0aPHh1HHXVUjBs3Lq6++up47rnnssrrSXqcnv/tb38bO+20U1x++eXx0ksvxSuvvJIF9eooLS2NFi1axJIlS6J58+a1ft8AAABsWqqbA2scujemFLTTOuFjxozJHq9ZsyY6duwYgwcPjmHDhn3m+JNPPjmWLl0aDz30UPm+/fbbL/bee+8suKdb79ChQ1x00UVx8cUXZ8+nN6xdu3Zx++23xymnnFKtdgndAAAAxaW0mqG7xoXUNpaVK1fGjBkzYvjw4ZV63dNw8OnTp1d5Tto/dOjQSvv69u0b999/f/b7m2++GfPnz8+uUZDetBTu07nVDd2buvTlwierLOUGAADULZs3bpiNqK7LqhW6b7jhhjj77LOrPdw69SIPHDgwmjVrFrVl8eLF2dD11AtdUXo8a9asKs9Jgbqq49P+wvOFfes6piorVqzItorfcGzKUuDebeQjG7sZAAAANfLKVX1jiyZ1pq94wwuppcJpH330UbUv+qMf/SgWLVoU9VWaA556xAtbGuIOAAAAa2tU3eHJhx56aDRqVL1vGD755JOobW3atImGDRvGggULKu1Pj9u3b1/lOWn/+o4v/Ez7UvXyiseked/rkoa4Vxy2nnq6N+XgnYZkpG+IAAAA6pLNGzeMuq5aKXrUqFE1uugxxxwTrVq1itrUpEmT6N69e0yZMiWOPfbY8kJq6fF5551X5Tm9e/fOnr/wwgvL902ePDnbn6Rq5Sl4p2MKITsF6KeeeirOOeecdbaladOm2VZXpDkQdX1IBgAAQF2US+jOS+pdPv3006NHjx7Rs2fPbMmwVJ38zDPPzJ5Py4ltt9122fDv5IILLogDDzwwrrnmmjjyyCPjrrvuimeffTZuueWW8jCaAvlPf/rT6NKlS/mSYamieSHYAwAAwIaqU92faQmwNFd85MiRWaGz1Ds9adKk8kJos2fPrrSO+P7775+tzT1ixIi49NJLs2CdKpcX1uguzD9PwT0Vivvwww/jgAMOyK5Z3aJxAAAAUC/W6d5UWacbAACguJRWc53ualUvBwAAAGpO6AYAAIBNNXSvXr06Xnjhhfjggw9qp0UAAABQrKE7Vfv+zW9+Ux64U3XwffbZJ1un+i9/+UsebQQAAIDiCN1333137LXXXtnvDz74YLz55psxa9asGDJkSFx22WV5tBEAAACKI3QvXrw42rdvn/0+ceLE+Pa3vx1f/epX43vf+1689NJLebQRAAAAiiN0pzWxX3nllWxoeVrP+lvf+la2f9myZdGwYcM82ggAAAB1UqOannDmmWfGSSedFNtuu22UlJREnz59sv1PPfVUdO3aNY82AgAAQHGE7iuuuCK6desWc+bMyYaWN23aNNufermHDRuWRxsBAACgTiopKysr29iNqOtKS0ujRYsWsWTJkmjevPnGbg4AAACbSA6scU938swzz8Tjjz8eCxcujDVr1lR67pe//OWGXBIAAADqnRqH7p/97GcxYsSI2GWXXbKiamled0HF3wEAAKDY1Th0X3/99XHrrbfGGWeckU+LAAAAoFiXDGvQoEF8/etfz6c1AAAAUMyhe8iQIXHjjTfm0xoAAAAo5uHlF198cRx55JHxla98JXbbbbdo3Lhxpefvvffe2mwfAAAAFE/oPv/887PK5QcffHC0bt1a8TQAAACordD929/+Nu65556stxsAAACoxTndrVq1yoaWAwAAALUcuq+44ooYNWpULFu2rKanAgAAQFGp8fDyG264If79739Hu3btolOnTp8ppPbcc8/VZvsAAACgeEL3sccem09LAAAAoJ4pKSsrK9vYjajrSktLo0WLFrFkyZJo3rz5xm4OAAAAm0gOrPGc7nV5991347zzzqutywEAAEBxDS9/+eWXszW6mzRpEieddFK0bNkyFi9eHD/96U/jV7/6VXTu3Dm/lgIAAEAdU+2e7gceeCC+9rWvxfnnnx8//OEPo0ePHlkA33XXXWPWrFlx3333ZaEcAAAAqGHoTr3Z5557bjZu/Ze//GW88cYbWQCfOHFiTJo0KQ4//PDqXgoAAACKQrULqaUJ4jNmzIidd945Vq9eHU2bNs3Cdp8+faLYKaQGAABQXEpru5DaRx99VH6hhg0bxuabb24ONwAAANRWIbVHHnkkS/LJmjVrYsqUKTFz5sxKx/Tv378mlwQAAIB6q9rDyxs0+PxO8ZKSkmzoebExvBwAAKC4lFZzeHm1e7pTzzYAAABQfdWe011TRx55ZLz77rt5XR4AAACKN3RPnTo1Pvnkk7wuDwAAAMUbugEAAKDYCd0AAACQE6EbAAAAij10v//++zFw4MCsFHvLli1j0KBB8fHHH6/3nOXLl8e5554brVu3jq222ipOOOGEWLBgQfnzL774YgwYMCA6duwYm2++eey6665x/fXXfwl3AwAAQDGoM6E7Be6XX345Jk+eHA899FBWqO3ss89e7zlDhgyJBx98MCZMmBBPPPFEzJs3L44//vjy52fMmBFt27aN3/3ud9m1L7vsshg+fHiMGTPmS7gjAAAA6ruSsrKysjwuPHr06DjnnHOyXukv6tVXX43ddtstnnnmmejRo0e2b9KkSdGvX7945513okOHDp85Jy1Qvs0228S4cePixBNPzPbNmjUr682ePn167LffflW+VuoZT6/32GOP1fqi6AAAANQP1c2BjTb0BV555ZWYPXt2rFy5stL+/v37Zz9Tj3FtSSE5hfdC4E769OkTDRo0iKeeeiqOO+64z5yTerFXrVqVHVfQtWvX2GGHHdYbutMb1qpVq/W2Z8WKFdlW8c0GAACALxy633jjjSzkvvTSS1FSUhKFjvL0e7J69eqobfPnz8+GgVfUqFGjLByn59Z1TpMmTT7T096uXbt1njNt2rQYP358PPzww5/bi3/llVfW+D4AAAAoLjWe033BBRfETjvtFAsXLowtttgimwud5lenXui//OUvNbrWsGHDsrC+vi0NCf8yzJw5M4455pgYNWpUHHbYYes9NvXipx7xwjZnzpwvpY0AAADU857uNDQ7zXdu06ZNNrw7bQcccEDW+3v++efH888/X+1rXXTRRXHGGWes95jOnTtH+/bts5Bf0aeffppVNE/PVSXtT0PfP/zww0q93al6+drnpKHyhx56aFaYbcSIEZ/b7qZNm2YbAAAA1GroTsPHmzVrlv2egneqCL7LLrvEjjvuGK+99lqNrpUKnaXt8/Tu3TsLz2medvfu3bN9KfivWbMmevXqVeU56bjGjRvHlClTsqXCktS+NA89Xa8g9dQfcsghcfrpp8d//ud/1qj9AAAAUKuhu1u3btn61mmIeQq8P//5z7O507fcckvWK52HVHH88MMPj7POOivGjh2bFUg777zz4pRTTimvXD537tyst/qOO+6Inj17ZlXk0lreQ4cOzeZ+p2pygwcPzgJ3oYhaGlKeAnffvn2z4wpzvRs2bFitLwMAAACgVkN3Gn69dOnS7PerrroqjjrqqPjGN74RrVu3zoqQ5eXOO+/MgnYK1mlIe+q9vuGGG8qfT0E89WQvW7asfN+1115bfmyqNp7C9U033VT+/N133x2LFi3K1ulOW0HqtX/rrbdyuxcAAACKQ62s053mVm+99dblFcyLjXW6AQAAiktp3ut0V/R561oDAABAMarxkmEAAABA9QjdAAAAkBOhGwAAAHIidAMAAEBOhG4AAADIidANAAAAORG6AQAAICdCNwAAAORE6AYAAICcCN0AAACQE6EbAAAAciJ0AwAAQE6EbgAAAMiJ0A0AAAA5EboBAAAgJ0I3AAAA5EToBgAAgJwI3QAAAJAToRsAAAByInQDAABAToRuAAAAyInQDQAAADkRugEAACAnQjcAAADkROgGAACAnAjdAAAAkBOhGwAAAHIidAMAAEBOhG4AAADIidANAAAAORG6AQAAICdCNwAAAORE6AYAAICcCN0AAACQE6EbAAAAij10v//++zFw4MBo3rx5tGzZMgYNGhQff/zxes9Zvnx5nHvuudG6devYaqut4oQTTogFCxZUeex7770X22+/fZSUlMSHH36Y010AAABQTOpM6E6B++WXX47JkyfHQw89FFOnTo2zzz57vecMGTIkHnzwwZgwYUI88cQTMW/evDj++OOrPDaF+D333DOn1gMAAFCMSsrKyspiE/fqq6/GbrvtFs8880z06NEj2zdp0qTo169fvPPOO9GhQ4fPnLNkyZLYZpttYty4cXHiiSdm+2bNmhW77rprTJ8+Pfbbb7/yY2+++eYYP358jBw5Mg499ND44IMPst706iotLY0WLVpkr5l64gEAAKjfqpsD60RPdwrJKQQXAnfSp0+faNCgQTz11FNVnjNjxoxYtWpVdlxB165dY4cddsiuV/DKK6/EVVddFXfccUd2PQAAAKgtjaIOmD9/frRt27bSvkaNGkWrVq2y59Z1TpMmTT7TY92uXbvyc1asWBEDBgyIX/ziF1kYf+ONN6rVnnRe2ip+wwEAAABr26hdu8OGDcsKl61vS0PC8zJ8+PBsuPl3v/vdGp03evTobBhBYevYsWNubQQAAKDu2qg93RdddFGcccYZ6z2mc+fO0b59+1i4cGGl/Z9++mlW0Tw9V5W0f+XKlVkl8oq93al6eeGcxx57LF566aW4++67s8eF6e1t2rSJyy67LK688sp1hvWhQ4dW6ukWvAEAANikQncqdJa2z9O7d+8sPKd52t27dy8PzGvWrIlevXpVeU46rnHjxjFlypRsqbDktddei9mzZ2fXS+6555745JNPys9Jhdq+973vxZNPPhlf+cpX1tmepk2bZhsAAADU+TndaQj44YcfHmeddVaMHTs2K5B23nnnxSmnnFJeuXzu3LlZ5fFUEK1nz57ZsO+0DFjqkU5zv1M1ucGDB2eBu1C5fO1gvXjx4vLXq0n1cgAAAKizoTu58847s6CdgnWqMp56r2+44Yby51MQTz3Zy5YtK9937bXXlh+bCp/17ds3brrppo10BwAAABSbOrFO96bOOt0AAADFpbQ+rdMNAAAAdZHQDQAAADkRugEAACAnQjcAAADkROgGAACAnAjdAAAAkBOhGwAAAHIidAMAAEBOhG4AAADIidANAAAAORG6AQAAICdCNwAAAORE6AYAAICcCN0AAACQE6EbAAAAciJ0AwAAQE6EbgAAAMiJ0A0AAAA5EboBAAAgJ0I3AAAA5EToBgAAgJwI3QAAAJAToRsAAAByInQDAABAToRuAAAAyInQDQAAADkRugEAACAnQjcAAADkpFFeFy4mZWVl2c/S0tKN3RQAAAC+BIX8V8iD6yJ014KPPvoo+9mxY8fauBwAAAB1KA+2aNFinc+XlH1eLOdzrVmzJubNmxfNmjWLkpKSDfqGJAX2OXPmRPPmzb3j+Izg7xFqlX9n8BnB3yPkrRj/rSkrK8sCd4cOHaJBg3XP3NbTXQvSG7z99tt/4eukD2exfEDZMD4j+IzwRfg7BJ8Rvih/j+AzUtn6ergLFFIDAACAnAjdAAAAkBOhexPQtGnTGDVqVPYTfEbw9wj+ncH/i7Cp8f+r+IxsOIXUAAAAICd6ugEAACAnQjcAAADkROgGAACAnAjdAAAAkBOhGwAAAHIidAMAAEBOhG4AAADIidANAAAAORG6AQAAICdCNwAAAORE6AYAAICcCN0AAACQE6EbAAAAciJ0AwAAQE6EbgAAAMhJo6gjRo8eHffee2/MmjUrNt9889h///3j6quvjl122aX8mH//+99x8cUXx1//+tdYsWJFHH744fE///M/0a5du3Ve94orrogrr7yy0r50zfQ61bVmzZqYN29eNGvWLEpKSjbwDgEAAKgrysrK4qOPPooOHTpEgwYN6n7ofuKJJ+Lcc8+NfffdNz799NO49NJL47DDDotXXnklttxyy1i6dGn2eK+99orHHnssO+fyyy+Po48+Ov7+97+v903Yfffd49FHHy1/3KhRzd6WFLg7duz4Be4OAACAumjOnDmx/fbb1/3QPWnSpEqPb7/99mjbtm3MmDEjvvnNb8bf/va3eOutt+L555+P5s2bZ8f89re/ja233joL4X369FnntVPIbt++/Qa3LfVwF97swmsDAABQf5WWlmadr4U8WOdD99qWLFmS/WzVqlX2Mw0nT0O7mzZtWn7MZpttlvVwp+Hm6wvdr7/+ejYkIB3fu3fvbCj7DjvssM7j02ulrSANKUhS4Ba6AQAAikfJ50wxrpOF1NIc6gsvvDC+/vWvR7du3bJ9++23XzbM/Mc//nEsW7YsG26e5nevXr063n333XVeq1evXlmveepJv/nmm+PNN9+Mb3zjG+VBuioplLdo0aJ8M7QcAACAehO609zumTNnxl133VW+b5tttokJEybEgw8+GFtttVUWhj/88MPYZ5991juf+4gjjohvf/vbseeee0bfvn1j4sSJ2Xl/+MMf1nnO8OHDs572wpaGlQMAAECdH15+3nnnxUMPPRRTp079zGT1VEgtVTBfvHhxNk+7ZcuW2Vztzp07V/v66ZyvfvWr8a9//Wudx6Qh7BWHsQMAAECd7ulO5dhT4L7vvvuywmg77bTTOo9t06ZNFp7TcQsXLoz+/ftX+3U+/vjjLLhvu+22tdRyAAAAilWDujSk/He/+12MGzcuqw43f/78bPvkk0/Kj7ntttuy5cFSaE7HpmHjQ4YMqbSW96GHHhpjxowpf5zmfaflyFLl82nTpsVxxx0XDRs2jAEDBnzp9wgAAED9UmeGl6ciZ8lBBx1UaX8K2meccUb2+2uvvZbNt37//fejU6dOcdlll2Whu6LC8POCd955JwvY7733XjYv/IADDsiCe/odAAAAvoiSsjRumy+8Plsq3JaKqlkyDAAAoP4rrWYOrDPDywEAAKCuEboBAAAgJ0I3AAAA5EToBgAAgJwI3QAAAJAToRsAAAByInQDAABAToRuAAAAyInQDQAAADkRugEAACAnQjcAAADkROgGAACAnAjdAAAAkBOhGwAAAHIidAMAAEBOhG4AAADIidANAAAAORG6AQAAICdCNwAAAORE6AYAAICcCN0AAACQE6EbAAAAciJ0AwAAQE6EbgAAAMiJ0A0AAAA5EboBAAAgJ0I3AAAA5EToBgAAgJwI3QAAAJAToRsAAAByInQDAABAsYfu0aNHx7777hvNmjWLtm3bxrHHHhuvvfZapWP+/e9/x3HHHRfbbLNNNG/ePE466aRYsGDB5177xhtvjE6dOsVmm20WvXr1iqeffjrHOwEAAKBY1JnQ/cQTT8S5554bf//732Py5MmxatWqOOyww2Lp0qXZ8+lnelxSUhKPPfZY/O1vf4uVK1fG0UcfHWvWrFnndcePHx9Dhw6NUaNGxXPPPRd77bVX9O3bNxYuXPgl3h0AAAD1UUlZWVlZ1EGLFi3KerxTGP/mN78Zf/7zn+OII46IDz74IOvlTpYsWRJbb7119lyfPn2qvE7q2U496GPGjMkep4DesWPHGDx4cAwbNqxabSktLY0WLVpkr1d4bQAAAOqv6ubAOtPTvbZ0Y0mrVq2ynytWrMh6uZs2bVp+TBou3qBBg/jrX/9a5TVST/iMGTMqBfJ0fHo8ffr03O8BAACA+q1Ohu7UG33hhRfG17/+9ejWrVu2b7/99ostt9wyfvzjH8eyZcuy4eYXX3xxrF69Ot59990qr7N48eLs+Xbt2lXanx7Pnz9/na+fAn76VqPiBgAAAPUidKe53TNnzoy77rqrfF8qnjZhwoR48MEHY6uttsq6+T/88MPYZ599st7r2i7qlq5f2NJwdAAAAFhbo6hjzjvvvHjooYdi6tSpsf3221d6LhVSSxXMUw92o0aNomXLltG+ffvo3Llzlddq06ZNNGzY8DMVztPjdN66DB8+PCu+VpB6ugVvAAAA6mxPd6r3lgL3fffdl1Un32mnndZ5bArTKXCn41IV8v79+1d5XJMmTaJ79+4xZcqUSkPX0+PevXuv8/pp3niaKF9xAwAAgDrb052GlI8bNy7++Mc/Zmt1F+Zcp+Hdm2++efb7bbfdFrvuums21DwVQrvgggtiyJAhscsuu5Rf59BDD83W8k4BPkk91qeffnr06NEjevbsGdddd102H/zMM8/cSHcKAABAfVFnQvfNN9+c/TzooIMq7U9B+4wzzsh+f+2117Kh3++//3506tQpLrvssix0V1QYfl5w8sknZ8uPjRw5Mgvye++9d0yaNOkzxdUAAACgaNbp3pRYpxsAAKC4lNb3dboBAABgUyd0AwAAQE6EbgAAAMiJ0A0AAAA5EboBAAAgJ0I3AAAA5EToBgAAgJwI3QAAAJAToRsAAAByInQDAABAToRuAAAAyInQDQAAADkRugEAACAnQjcAAAAI3QAAAFC36OkGAACAnAjdAAAAkBOhGwAAAHIidAMAAEBOhG4AAADIidANAAAAORG6AQAAICdCNwAAAOSkUR4XLS0trfE5zZs3z6MpAAAAUL9Cd8uWLaOkpKTax6dj//nPf0bnzp3zaA4AAADUn9Cd3H333dGqVavPPa6srCz69euXVzMAAACgfoXuHXfcMb75zW9G69atq3V86uFu3LhxHk0BAACA+hW633zzzRodP3PmzDyaAQAAABuV6uUAAABQ10L3Y489FrvttluVlcyXLFkSu+++ezz55JN5vTwAAADU39B93XXXxVlnnVXlUmAtWrSIH/zgB/HLX/4yr5cHAACA+hu6X3zxxTj88MPX+fxhhx0WM2bMqPb1Ro8eHfvuu280a9Ys2rZtG8cee2y89tprlY6ZP39+nHrqqdG+ffvYcsstY5999ol77rlnvde94oorsiXLKm5du3atdrsAAADgSw/dCxYsWG9F8kaNGsWiRYuqfb0nnngizj333Pj73/8ekydPjlWrVmXBfenSpeXHnHbaaVkQf+CBB+Kll16K448/Pk466aR4/vnn13vtNNT93XffLd/++te/VrtdAAAA8KWv073ddttlVcl33nnnKp//xz/+Edtuu221rzdp0qRKj2+//fasxzv1lqflyZJp06bFzTffHD179swejxgxIq699trsmK997Wvr/QIg9Y4DAABAnejp7tevX1x++eWxfPnyzzz3ySefxKhRo+Koo47a4OunYmxJq1atyvftv//+MX78+Hj//fdjzZo1cdddd2Wvf9BBB633Wq+//np06NAhWy984MCBMXv27A1uFwAAABSUlJWVlUVOw8vTnOqGDRvGeeedF7vssku2f9asWXHjjTfG6tWr47nnnot27drV+NopUPfv3z8+/PDDSkPB0+OTTz45/vznP2e911tssUVMmDAhG4a+Ln/605/i448/ztqXhpZfeeWVMXfu3KyXPs0fr8qKFSuyrSBVaO/YsWP2RUBVheMAAACoX1IOTEXCPy8H5ja8PIXpNNz7nHPOieHDh0ch26dCZX379s2C94YE7iTN7U6heO2516lnPQXvRx99NNq0aRP3339/Nqc7LU22xx57VHmtI444ovz3PffcM3r16hU77rhj/OEPf4hBgwats6hbCucAAACwUXq6K/rggw/iX//6Vxa8u3TpEltvvfUGXyv1mv/xj3+MqVOnxk477VS+/9///nc2fzyF8VQYraBPnz7Z/rFjx1b7NVKV9HReCtdV0dMNAABQ3Eo3dk93RSlkpyD7RaTAPnjw4LjvvvviL3/5S6XAnSxbtiz72aBB5WnqaXh7Go5eXWmoeQrwaemxdWnatGm2AQAAwJdeSC0t1ZVSf3Wl4mULFy783CHlv/vd72LcuHHZXOu0JnfaUlG2JK2tnXq0f/CDH8TTTz+dBedrrrkmW14sreldcOihh8aYMWPKH1988cXZcmRvvfVWNhz+uOOOy4L6gAEDNujeAQAAINee7jT8u7prcKce7AcffDB+8pOfZEuArUtaCixZuxL5bbfdFmeccUa2JvjEiRNj2LBhcfTRR2c91imE//a3v80qqRekML548eLyx++8804WsN97773YZptt4oADDsjWAk+/AwAAwCY3pzsN8U4F02oiLduVluyqz2P5AQAAqB826pzuxx9/vMbnbLfddnk0BQAAADaaXEL3gQcemMdlAQAAoE7JpZAaAAAAIHQDAABAbvR0AwAAQE6EbgAAAKjLofvTTz+NRx99NH71q1/FRx99lO2bN29etpY2AAAA1Fe5VC+v6O23347DDz88Zs+eHStWrIhvfetb0axZs7j66quzx2PHjs27CQAAAFA/e7ovuOCC6NGjR3zwwQex+eabl+8/7rjjYsqUKXm/PAAAANTfnu4nn3wypk2bFk2aNKm0v1OnTjF37ty8Xx4AAADqb0/3mjVrYvXq1Z/Z/84772TDzAEAAKC+yj10H3bYYXHdddeVPy4pKckKqI0aNSr69euX98sDAADARlNSVlZWlucLzJkzJyukll7m9ddfz+Z3p59t2rSJqVOnRtu2baOuKy0tjRYtWsSSJUuiefPmG7s5AAAAbCI5MPfQXVgybPz48fHiiy9mvdz77LNPDBw4sFJhtbpM6AYAACgupZtC6F61alV07do1Hnroodh1112jvhK6AQAAiktpNUN3rnO6GzduHMuXL8/zJQAAAKB4C6mde+65cfXVV2dDzAEAAKCY5L5O9zPPPBNTpkyJP//5z7HHHnvElltuWen5e++9N+8mAAAAQP0M3S1btowTTjgh75cBAACA4gvdt912W94vAQAAAMU5pxsAAACKVe493TvttFOUlJSs8/k33ngj7yYAAABA/QzdF1544WfW7n7++edj0qRJcckll+T98gAAAFB/Q/cFF1xQ5f4bb7wxnn322bxfHgAAAIpvTvcRRxwR99xzz8Z6eQAAAKi/ofvuu++OVq1abayXBwAAgLo/vPxrX/tapUJqZWVlMX/+/Fi0aFHcdNNNeb88AAAA1N/Qfcwxx1QK3Q0aNIhtttkmDjrooOjatWveLw8AAAAbTUlZ6nrmCyktLY0WLVrEkiVLonnz5t5NAACAeq60mjkw9zndDRs2jIULF35m/3vvvZc9BwAAAPVV7qF7XR3pK1asiCZNmuT98gAAAFD/5nTfcMMN2c80n/vXv/51bLXVVuXPrV69OqZOnWpONwAAAPVabj3d1157bbalnu6xY8eWP05berxs2bLsZ3WNHj069t1332jWrFm0bds2jj322HjttdcqHZOqop966qnRvn372HLLLWOfffap1lrgN954Y3Tq1Ck222yz6NWrVzz99NMbdM8AAADwpfR0v/nmm9nPgw8+OO69997Yeuutv9D1nnjiiTj33HOz4P3pp5/GpZdeGocddli88sorWcBOTjvttPjwww/jgQceiDZt2sS4cePipJNOimeffTZbuqwq48ePj6FDh2ZfAKTAfd1110Xfvn2zQJ/CPQAAABRd9fK0zncKxSmMf/Ob38z2pSHsN998c9bbXdC6deu4+uqr4/vf/36V10lBOwX5MWPGZI/XrFkTHTt2jMGDB8ewYcPqRfXy9Ef8yarVG7sZAAAANbJ544aVlqDelFQ3B+a+TnfyzjvvZL3Ps2fPjpUrV1Z67pe//OUGXTPdWNKqVavyffvvv3/Wc33kkUdGy5Yt4w9/+EMsX748WxO8KqktM2bMiOHDh1daR7xPnz4xffr0db52KgKXtopv9qYsBe7dRj6ysZsBAABQI69c1Te2aPKlxNbc5N76KVOmRP/+/aNz584xa9as6NatW7z11ltZ72uac70hUm/0hRdeGF//+tez6xWkkH3yySdnvduNGjWKLbbYIu67777Yeeedq7zO4sWLs6Ju7dq1q7Q/PU5tXd/88iuvvHKD2g7/X3t3Ah5VefZ//M6+J0BIwhbZISiCotYCbq8gitaKbbWlVBSpbREs2OJfURFXsL5d1GoR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U1OjTwa6sAMAAAAAmhLhUenXRPv27Wvx+3379m31dbrdbvn2t78tx48fl40bNzZ5mVtvvVWH6S+//LLF61qxYoUkJiZK//79JT8/X+6++269Mr5p0ya9et6U+++/X5euN/VGQGpqaqt/HwAAAACAtajF17S0tFPmQNNDtxlmzJgh77zzjg7cffr0afT9qqoq6dmzp8yfP19++ctftuq6d+/eLQMHDpT33ntPxo0bF/RKt9pTTugGAAAAAGcoDTJ0m95ITfnTn/4kY8eOlV69evlWvh9//HF58803W31ds2bNkrffflvWrl3bZOBWVq5cKZWVlTJ16tRWX/+AAQOke/fukpeX1+IecHWn+p8AAAAAAOj00L148WL5xS9+IVdeeaUuBzf2cHfp0kUH72CpBXkVuFVztA8++ECXgzfn+eef1+XnGRkZrT7er776So4cOaJXygEAAAAACOvQ/fvf/16WLl0q99xzT8AeaTVKbNu2bUFfjxoX9uc//1mWL1+uZ3UXFhbqkyol96dWqDds2CA//vGPm7yenJwcHdyV8vJy3VVdjSFTc77ff/99ueaaa2TQoEFy+eWXt/l3BgAAAACgU0L3nj175Oyzz26yRNuYsR3sirmqlb/kkkv0KrRx+stf/hJwuRdeeEGXnasZ3k3Jzc31dT5XbwL85z//0aviQ4YMkenTp8s555wjH374oT4+AAAAAADCemSYKgNXo7tO7lKu5m4PGzYs6OsJtt/bwoUL9SmY60lISJB333036GMAAAAAACAsQveDDz4oc+fO1fu5VWl4dXW1DryffvqpvPLKK7Jo0SJ57rnnzLp5AAAAAABCzrSRYap0++DBg5KZmSkvv/yynm2t5mArqou5mnOtyrmd1CoeAAAAAGAPIZ/THRkZqRudqdBtUGO8VPMy//PsgNANAAAAAM5SGmToNnVPd0RERMDXiYmJ+gQAAAAAgBOYGrpVR/CTg/fJjh49auYhAAAAAABgz9Ct9m2r5XYAAAAAAJzI1ND9gx/8wHb7twEAAAAACFakmORUZeUAAAAAANidaaHbpKboAAAAAABYhmnl5W6326yrBgAAAADA2SvdAAAAAAA4HaEbAAAAAACTELoBAAAAADAJoRsAAAAAAJMQugEAAAAAMAmhGwAAAAAAkxC6AQAAAAAwCaEbAAAAAACTELoBAAAAADAJoRsA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"/>
 </div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h4 id="2)-Explain-what-is-IO-Link-protocol?">2) Explain what is IO-Link protocol?<a class="anchor-link" href="#2)-Explain-what-is-IO-Link-protocol?">¶</a></h4>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<hr/>
-<p>The IO-Link protocol is a protocol that connects sensors and actuators to an interface with PROFINET. This PROFINET can communicate with a centralized controller that can display visual data or communicate with higher level SCADA or MES devices. It allows for easy install, faster data processing, and data parameterization. IO-Link exists at a lower level than MODBUS since IO-link handles binary and analog inputs and outputs from sensors and actuators rather than sophisticated messages.</p>
-<hr/>
 </div>
 </div>
 </div>
@@ -7736,13 +7987,37 @@ Things (IIoT) implementations. In Lab3, we will collect data from two IoT device
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [3]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [17]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">YouTubeVideo</span>
-<span class="n">YouTubeVideo</span><span class="p">(</span><span class="s1">'614QGgw_FA4'</span><span class="p">)</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Calculate time-domain features</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="c1">#Watch this video to answer question 3.</span>
+<span class="n">td_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="n">columns</span><span class="o">=</span><span class="p">[</span>
+        <span class="s2">"Mean"</span><span class="p">,</span>
+        <span class="s2">"Standard Deviation"</span><span class="p">,</span>
+        <span class="s2">"Root Mean Square"</span><span class="p">,</span>
+        <span class="s2">"Peak"</span><span class="p">,</span>
+        <span class="s2">"Skewness"</span><span class="p">,</span>
+        <span class="s2">"Kurtosis"</span><span class="p">,</span>
+        <span class="s2">"Crest Factor"</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="n">index</span><span class="o">=</span><span class="n">INPUTS</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span> <span class="n">INPUTS</span><span class="p">:</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="nb">input</span><span class="p">]</span>
+    <span class="n">td_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">input</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">data</span><span class="p">),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">data</span><span class="p">),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">data</span><span class="o">**</span><span class="mi">2</span><span class="p">)),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">data</span><span class="p">),</span>
+        <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">skew</span><span class="p">(),</span>
+        <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">kurtosis</span><span class="p">(),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">data</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">data</span><span class="o">**</span><span class="mi">2</span><span class="p">)),</span>
+    <span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">td_df</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -7752,10 +8027,35 @@ Things (IIoT) implementations. In Lab3, we will collect data from two IoT device
 <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[3]:</div>
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
-<iframe allowfullscreen="" frameborder="0" height="300" src="https://www.youtube.com/embed/614QGgw_FA4" width="400"></iframe>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>                     Mean Standard Deviation Root Mean Square Peak Skewness  \
+v_Rms [m/s]           0.0                0.0              0.0    0      0.0   
+a_Peak [m/s^2]        0.0                0.0              0.0    0      0.0   
+a_Rms [m/s^2]         0.0                0.0              0.0    0      0.0   
+Temperature [C]      28.0                0.0             28.0   28      0.0   
+Crest [-]        4.068966           0.253395         4.076848    5  3.59052   
+
+                  Kurtosis Crest Factor  
+v_Rms [m/s]            0.0          NaN  
+a_Peak [m/s^2]         0.0          NaN  
+a_Rms [m/s^2]          0.0          NaN  
+Temperature [C]        0.0          1.0  
+Crest [-]        11.695473     1.226438  
+</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
+<pre>C:\Users\rd908\AppData\Local\Temp\ipykernel_14288\4237988881.py:25: RuntimeWarning: invalid value encountered in scalar divide
+  np.max(np.abs(data)) / np.sqrt(np.mean(data**2)),
+C:\Users\rd908\AppData\Local\Temp\ipykernel_14288\4237988881.py:25: RuntimeWarning: invalid value encountered in scalar divide
+  np.max(np.abs(data)) / np.sqrt(np.mean(data**2)),
+C:\Users\rd908\AppData\Local\Temp\ipykernel_14288\4237988881.py:25: RuntimeWarning: invalid value encountered in scalar divide
+  np.max(np.abs(data)) / np.sqrt(np.mean(data**2)),
+</pre>
 </div>
 </div>
 </div>
@@ -7767,7 +8067,25 @@ Things (IIoT) implementations. In Lab3, we will collect data from two IoT device
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h4 id="3)-Explain-what-is-TCP/IP-protocol?">3) Explain what is TCP/IP protocol?<a class="anchor-link" href="#3)-Explain-what-is-TCP/IP-protocol?">¶</a></h4>
+<h2 id="3.2-Data-collection-from-multiple-sensors-in-a-single-program">3.2 Data collection from multiple sensors in a single program<a class="anchor-link" href="#3.2-Data-collection-from-multiple-sensors-in-a-single-program">¶</a></h2><p>In this lab so far, we collected data from each sensor in a program. In this section, we try to collect data from both sensors at the same time in a single program.</p>
+<p>Perform the Tasks below.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h3 id="Task-3.4">Task 3.4<a class="anchor-link" href="#Task-3.4">¶</a></h3><p>By using the sample code 1 and 2, program a Python code as instructed below.</p>
+<ul>
+<li>Make infinitely printing out all sensor data at the same time in a 'while' loop.</li>
+<li>Use 'try' and 'except' to halt your program when pressing Ctrl+c.</li>
+<li>Capture your console window or terminal when your program is running and attach it below.</li>
+<li>You can use either laptop or Raspberry Pi to run this code.</li>
+</ul>
 </div>
 </div>
 </div>
@@ -7779,53 +8097,121 @@ Things (IIoT) implementations. In Lab3, we will collect data from two IoT device
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <hr/>
-<p>TCP/IP is an internet communication protocol that describes how messages should be sent and recieved over the internet. It decribes how they should be</p>
-<ol>
-<li>Broken Down</li>
-<li>Addressed</li>
-<li>Transmitted</li>
-<li>Routed</li>
-<li>Received</li>
-</ol>
-<p>TCP defines how applications should create communication channels and manages how messages should be broken down and reassembled.
-IP defines how to address devices to ensure that messages are recieved by the correct device.</p>
-<p>TCP/IP has four layers:</p>
-<ol>
-<li>Application Layer: Standardized data exchange protocols</li>
-<li>Transport Layer: End-to-end communication accross network using TCP</li>
-<li>Network Layer: Connects networks for messages to be sent and received outside of the network boundaries.</li>
-<li>Physical Layer: Messages that only operate on a link or nodes and devices that exist on a network.</li>
-</ol>
-<hr/>
+<h2 id="Place-your-screenshot-for-Task-3.4-here.">Place your screenshot for Task 3.4 here.<a class="anchor-link" href="#Place-your-screenshot-for-Task-3.4-here.">¶</a></h2>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [4]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">YouTubeVideo</span>
-<span class="n">YouTubeVideo</span><span class="p">(</span><span class="s1">'lsMQRaeKNDk'</span><span class="p">)</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1">### place your code for Task 3.4</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pymodbus.client.sync</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModbusTcpClient</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pymodbus.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">Endian</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pymodbus.payload</span><span class="w"> </span><span class="kn">import</span> <span class="n">BinaryPayloadDecoder</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
 
-<span class="c1">#Watch this video to answer question 4.</span>
+<span class="n">URL</span> <span class="o">=</span> <span class="s2">"http://10.165.67.146/"</span>
+<span class="n">BODY</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"code"</span><span class="p">:</span> <span class="s2">"request"</span><span class="p">,</span>
+    <span class="s2">"cid"</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="s2">"adr"</span><span class="p">:</span> <span class="s2">"/iolinkmaster/port[1]/iolinkdevice/iolreadacyclic"</span><span class="p">,</span>
+    <span class="s2">"data"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"index"</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span> <span class="s2">"subindex"</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
+<span class="p">}</span>
+<span class="n">HOST</span> <span class="o">=</span> <span class="s2">"10.165.67.146"</span>
+<span class="n">PORT</span> <span class="o">=</span> <span class="mi">502</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PowerMeterRegister</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">address</span> <span class="o">=</span> <span class="n">address</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">read_register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">:</span> <span class="n">ModbusTcpClient</span><span class="p">):</span>
+        <span class="n">read</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">read_holding_registers</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">address</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">read</span><span class="o">.</span><span class="n">isError</span><span class="p">():</span>
+            <span class="n">client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Modbus read error: </span><span class="si">{</span><span class="n">read</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+        <span class="n">reg</span> <span class="o">=</span> <span class="n">read</span><span class="o">.</span><span class="n">registers</span>
+
+        <span class="n">decoder</span> <span class="o">=</span> <span class="n">BinaryPayloadDecoder</span><span class="o">.</span><span class="n">fromRegisters</span><span class="p">(</span>
+            <span class="n">reg</span><span class="p">,</span> <span class="n">byteorder</span><span class="o">=</span><span class="n">Endian</span><span class="o">.</span><span class="n">Big</span><span class="p">,</span> <span class="n">wordorder</span><span class="o">=</span><span class="n">Endian</span><span class="o">.</span><span class="n">Big</span>
+        <span class="p">)</span>
+
+        <span class="n">value</span> <span class="o">=</span> <span class="n">decoder</span><span class="o">.</span><span class="n">decode_32bit_float</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">value</span>
+
+
+<span class="n">registers</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">PowerMeterRegister</span><span class="p">(</span><span class="s2">"Frequency [Hz]"</span><span class="p">,</span> <span class="mi">1536</span><span class="p">),</span>
+    <span class="n">PowerMeterRegister</span><span class="p">(</span><span class="s2">"Voltage 1 [V]"</span><span class="p">,</span> <span class="mi">1538</span><span class="p">),</span>
+    <span class="n">PowerMeterRegister</span><span class="p">(</span><span class="s2">"Current 1 [A]"</span><span class="p">,</span> <span class="mi">1550</span><span class="p">),</span>
+    <span class="n">PowerMeterRegister</span><span class="p">(</span><span class="s2">"Power Factor [-]"</span><span class="p">,</span> <span class="mi">1582</span><span class="p">),</span>
+    <span class="n">PowerMeterRegister</span><span class="p">(</span><span class="s2">"True Power [W]"</span><span class="p">,</span> <span class="mi">1564</span><span class="p">),</span>
+<span class="p">]</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">read_modbus_data</span><span class="p">(</span><span class="n">client</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">client</span><span class="o">.</span><span class="n">connect</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Connect failed: </span><span class="si">{</span><span class="n">HOST</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">PORT</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">reg</span> <span class="ow">in</span> <span class="n">registers</span><span class="p">:</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="k">await</span> <span class="n">reg</span><span class="o">.</span><span class="n">read_register</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">now</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">reg</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> is </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">read_iolink_data</span><span class="p">():</span>
+    <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+    <span class="n">req</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">URL</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">BODY</span><span class="p">)</span>
+    <span class="n">data_json</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">data_json</span><span class="p">[</span><span class="s2">"data"</span><span class="p">][</span><span class="s2">"value"</span><span class="p">]</span>
+    <span class="n">v_rms</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.0001</span><span class="p">)</span>
+    <span class="n">a_peak</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">8</span><span class="p">:</span><span class="mi">12</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.1</span><span class="p">)</span>
+    <span class="n">a_rms</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">16</span><span class="p">:</span><span class="mi">20</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.1</span><span class="p">)</span>
+    <span class="n">temperature</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">24</span><span class="p">:</span><span class="mi">28</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.1</span><span class="p">)</span>
+    <span class="n">crest</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="mi">32</span><span class="p">:</span><span class="mi">36</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.1</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">now</span><span class="si">}</span><span class="s2">: v_Rms [m/s] is </span><span class="si">{</span><span class="n">v_rms</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">now</span><span class="si">}</span><span class="s2">: a_Peak [m/s^2] is </span><span class="si">{</span><span class="n">a_peak</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">now</span><span class="si">}</span><span class="s2">: a_Rms [m/s^2] is </span><span class="si">{</span><span class="n">a_rms</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">now</span><span class="si">}</span><span class="s2">: Temperature [C] is </span><span class="si">{</span><span class="n">temperature</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">now</span><span class="si">}</span><span class="s2">: Crest [-] is </span><span class="si">{</span><span class="n">crest</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">read_modbus_data</span><span class="p">(</span><span class="n">client</span><span class="p">),</span> <span class="n">read_iolink_data</span><span class="p">())</span>
+
+
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">ModbusTcpClient</span><span class="p">(</span><span class="n">HOST</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">PORT</span><span class="p">)</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
+        <span class="c1"># Run both tasks concurrently so as to not block one another</span>
+        <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
 </pre></div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
 </div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[4]:</div>
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
-<iframe allowfullscreen="" frameborder="0" height="300" src="https://www.youtube.com/embed/lsMQRaeKNDk" width="400"></iframe>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<hr/>
+<img alt="No description has been provided for this image" src="https://github.com/rd908213/ME-597-IIoT/blob/main/lab/lab3/img/L3_Task3.4.png?raw=true" width="100%"/>
+---
+
+
 </div>
 </div>
 </div>
@@ -7836,7 +8222,18 @@ IP defines how to address devices to ensure that messages are recieved by the co
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h4 id="4)-Explain-what-is-REST-API?">4) Explain what is REST API?<a class="anchor-link" href="#4)-Explain-what-is-REST-API?">¶</a></h4>
+<h3 id="Task-3.5">Task 3.5<a class="anchor-link" href="#Task-3.5">¶</a></h3><p>Let's think more about IoT sensors and data collection in the sense of the programmer. The answers are open-ended. Answer the questions below.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h4 id="1)-If-you-want-to-collect-data-from-muliple-sensors-which-have-different-sampling-periods,-how-can-you-implement-your-program?">1) If you want to collect data from muliple sensors which have different sampling periods, how can you implement your program?<a class="anchor-link" href="#1)-If-you-want-to-collect-data-from-muliple-sensors-which-have-different-sampling-periods,-how-can-you-implement-your-program?">¶</a></h4>
 </div>
 </div>
 </div>
@@ -7848,8 +8245,7 @@ IP defines how to address devices to ensure that messages are recieved by the co
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <hr/>
-<p>REST API stands for Representational State Transfer API. It is a communication protocol for web applications to communicate with a cloud or server. Some of its benefits include its stability, statelessness, simplicity, scalability, and its high performance due to caching.</p>
-<p>REST API consists of a request from an application and the response received from the server. Requests send commands for CRUD or Create, Read, Update, and Delete. Over RESTful communication, these translate into the POST, GET, PUT and DELETE operations. Requests consist of headers, operation, endpoint to use, and the request body. The response typically is a simple json message with information from the cloud or server.</p>
+<p>I would use write asynchronous functions that sample each sensor independently so that threads dedicated to one sensor are not blocked by the other.</p>
 <hr/>
 </div>
 </div>
@@ -7861,7 +8257,7 @@ IP defines how to address devices to ensure that messages are recieved by the co
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h4 id="5)-What-can-be-the-applications-of-power-and-vibration-monitoring-in-the-industry?">5) What can be the applications of power and vibration monitoring in the industry?<a class="anchor-link" href="#5)-What-can-be-the-applications-of-power-and-vibration-monitoring-in-the-industry?">¶</a></h4>
+<h4 id="2)-How-can-you-make-your-program-robust/stable-even-if-suddenly-unwanted-network-connection-failure-happens?">2) How can you make your program robust/stable even if suddenly unwanted network connection failure happens?<a class="anchor-link" href="#2)-How-can-you-make-your-program-robust/stable-even-if-suddenly-unwanted-network-connection-failure-happens?">¶</a></h4>
 </div>
 </div>
 </div>
@@ -7873,14 +8269,134 @@ IP defines how to address devices to ensure that messages are recieved by the co
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <hr/>
-<p>Some examples of power and vibration monitoring in industry include:</p>
+<p>To make the program more robust/stable if suddenly unwanted network connection failure happens, I would include try/except statements to attempt to reconnect. If a reconnection is impossible (for example, if a sensor physically becomes unplugged), I would print an error code. If the program is used to sample more than one sensor, I would either:
+a) Include an in-memory store of sensor status and stop sampling a sensor with a connection issue.
+b) Print a connection failure message each time the sensor is supposed to be sampled.</p>
+<hr/>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h4 id="3)-What-can-you-do-with-the-electrical-power-and-vibration-data?-Can-they-be-used-for-an-operational-condition-or-health-monitoring?">3) What can you do with the electrical power and vibration data? Can they be used for an operational condition or health monitoring?<a class="anchor-link" href="#3)-What-can-you-do-with-the-electrical-power-and-vibration-data?-Can-they-be-used-for-an-operational-condition-or-health-monitoring?">¶</a></h4>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<hr/>
+<p>With electrical power, I would be able to measure the operational condition of an electrical device (is it turned on, are there any faults). If it is a battery, I would also be able to measure its power output to check for battery health or charge.</p>
+<p>With vibration data, I could check for operational condition and health of rotating machinery. For example, in a fan turbine I could check for unnecessary vibration to assess if bearings need to be replaced.</p>
+<hr/>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="Lab3-Summary-and-Deliverables">Lab3 Summary and Deliverables<a class="anchor-link" href="#Lab3-Summary-and-Deliverables">¶</a></h2><p>Answer the following questions for your achievements</p>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h3 id="Q1.-Please-summarize-Lab3.">Q1. Please summarize Lab3.<a class="anchor-link" href="#Q1.-Please-summarize-Lab3.">¶</a></h3><hr/>
+<p>Lab 3 covered how to connect to devices using the MODBUS protocol, and how to connect to devices using the IOLink interface and query it using RESTAPI HTTP queries. The use case was measuring the power output and vibration data of a vacuum pump.</p>
+<p>In this specific lab, we connected to a power meter using modbus and found the following sensor readings:</p>
 <ol>
-<li>Monitoring the power output of a generator.</li>
-<li>Ensuring that large spinning equipment is not exceeding its manufacturing specification.</li>
-<li>Identifying where electrical faults are caused for easier diagnosis and maintenance.</li>
-<li>Giving live feedback data in automotive applications for battery health and the degradation of spinning components.</li>
-<li>Identifying when motors are physically blocked from rotating based on their electrical resistance.</li>
+<li>Frequency</li>
+<li>Voltage</li>
+<li>Current</li>
+<li>Power Factor</li>
+<li>True Power</li>
 </ol>
+<p>We found the following sensor readings from a vibration sensor connected to the pump:</p>
+<ol>
+<li>Velocity</li>
+<li>Peak Acceleration</li>
+<li>Acceleration</li>
+<li>Temperature</li>
+<li>Crest</li>
+</ol>
+<p>Using these sensor readings we were able to take useful measurements that could be used to analyze the life, health or status of a vacuum pump.</p>
+<hr/>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h3 id="Q2.-What-skills-did-you-have-to-develop-to-accomplish-this-project?">Q2. What skills did you have to develop to accomplish this project?<a class="anchor-link" href="#Q2.-What-skills-did-you-have-to-develop-to-accomplish-this-project?">¶</a></h3><hr/>
+<p>To accomplish this project, I needed to develop my networking skills in order to communicate with the various sensors and devices for this project. I also continue to improve my python skills as shown by my brief examples of object oriented programming.</p>
+<hr/>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h3 id="Q3.-What-aspects-of-this-project-were-the-most-beneficial-for-your-learning?">Q3. What aspects of this project were the most beneficial for your learning?<a class="anchor-link" href="#Q3.-What-aspects-of-this-project-were-the-most-beneficial-for-your-learning?">¶</a></h3><hr/>
+<p>The aspects of the project that were most beneficial for my learning were being able to connect the theory described in the prelab (communication protocols, how sensors are used) and apply them to a real-world scenario.</p>
+<hr/>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h3 id="Q4.-What-challenges-did-you-encounter-in-completing-the-project?">Q4. What challenges did you encounter in completing the project?<a class="anchor-link" href="#Q4.-What-challenges-did-you-encounter-in-completing-the-project?">¶</a></h3><hr/>
+<p>I encountered an issue where even when connected to the purdue VPN, I was unable to ping the router connected to the devices. This was a difficult problem to diagnose since it could be an issue with</p>
+<ol>
+<li>My own network</li>
+<li>The VPN connection</li>
+<li>The routing set up on my own computer</li>
+<li>Purdue's network</li>
+<li>The device itself</li>
+</ol>
+<hr/>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h3 id="Q5.-How-did-you-overcome-the-challenges-or-remedy-the-problems-encountered?">Q5. How did you overcome the challenges or remedy the problems encountered?<a class="anchor-link" href="#Q5.-How-did-you-overcome-the-challenges-or-remedy-the-problems-encountered?">¶</a></h3><hr/>
+<p>To remedy this challenge, I consulted the TA Yuseop Sim and asked him to investigate on his end why PING was not working. At the same time, I changed my VPN settings and verified that it was correctly configured to work with the purdue VPN network. In the end, the TA found out that the issue was that Purude ECN blocks PING, so I was unable to verify the connection this way. I was able to complete the rest of the lab since methods other than PING are allowed on the network.</p>
 <hr/>
 </div>
 </div>
@@ -7893,7 +8409,7 @@ IP defines how to address devices to ensure that messages are recieved by the co
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <p><br/></p>
-<p>Please continue to <a href="https://colab.research.google.com/github/purduelamm/purdue_me597_iiot/blob/main/lab/lab3/PL3_Colab2.ipynb">Prelab 3.2 here</a>.</p>
+<p>Get back to <a href="https://colab.research.google.com/github/purduelamm/purdue_me597_iiot/blob/main/index.ipynb">Lab Index Page</a></p>
 </div>
 </div>
 </div>
