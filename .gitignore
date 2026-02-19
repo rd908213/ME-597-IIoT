@@ -212,3 +212,9 @@ __marimo__/
 
 # Mac Specific Files
 *.DS_Store
+
+# zip files
+*.zip
+
+# lab specifics
+agent_Windows/
