@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/styles/Streams.xsl"?>
+<MTConnectStreams xmlns:m="urn:mtconnect.org:MTConnectStreams:1.5" xmlns="urn:mtconnect.org:MTConnectStreams:1.5" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:mtconnect.org:MTConnectStreams:1.5 /schemas/MTConnectStreams_1.5.xsd">
+  <Header creationTime="2026-02-21T18:19:40Z" sender="robertclaud" instanceId="1771697724" version="1.8.0.3" bufferSize="131072" nextSequence="747" firstSequence="1" lastSequence="746"/>
+  <Streams>
+    <DeviceStream name="sensor" uuid="000">
+      <ComponentStream component="Device" name="sensor" componentId="s1">
+        <Samples>
+          <Acceleration dataItemId="a1" name="Xacc" sequence="744" timestamp="2026-02-21T18:19:40.298331Z">1.0591182</Acceleration>
+          <Acceleration dataItemId="a2" name="Yacc" sequence="745" timestamp="2026-02-21T18:19:40.298331Z">0</Acceleration>
+          <Acceleration dataItemId="a3" name="Zacc" sequence="746" timestamp="2026-02-21T18:19:40.298331Z">9.7281968</Acceleration>
+          <HumidityRelative dataItemId="h1" name="humd" sequence="743" subType="ACTUAL" timestamp="2026-02-21T18:19:39.035028Z">81</HumidityRelative>
+          <Temperature dataItemId="t1" name="temp" sequence="742" subType="ACTUAL" timestamp="2026-02-21T18:19:39.035028Z">29</Temperature>
+        </Samples>
+        <Events>
+          <Availability dataItemId="avail" sequence="503" timestamp="2026-02-21T18:18:17.742924Z">AVAILABLE</Availability>
+          <AssetChanged dataItemId="s1_asset_chg" sequence="2" timestamp="2026-02-21T18:15:24.929138Z">UNAVAILABLE</AssetChanged>
+          <AssetRemoved dataItemId="s1_asset_rem" sequence="1" timestamp="2026-02-21T18:15:24.92796Z">UNAVAILABLE</AssetRemoved>
+        </Events>
+      </ComponentStream>
+    </DeviceStream>
+  </Streams>
+</MTConnectStreams>
