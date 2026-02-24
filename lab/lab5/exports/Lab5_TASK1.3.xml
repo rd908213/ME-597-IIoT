@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/styles/Streams.xsl"?>
+<MTConnectStreams xmlns:m="urn:mtconnect.org:MTConnectStreams:1.5" xmlns="urn:mtconnect.org:MTConnectStreams:1.5" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:mtconnect.org:MTConnectStreams:1.5 /schemas/MTConnectStreams_1.5.xsd">
+  <Header creationTime="2026-02-24T05:29:40Z" sender="robertclaud" instanceId="1771909861" version="1.8.0.3" bufferSize="131072" nextSequence="59" firstSequence="1" lastSequence="58"/>
+  <Streams>
+    <DeviceStream name="sensor" uuid="000">
+      <ComponentStream component="Device" name="sensor" componentId="s1">
+        <Samples>
+          <Acceleration dataItemId="a1" name="Xacc" sequence="54" timestamp="2026-02-24T05:29:39.660554Z">-0.3138128</Acceleration>
+          <Acceleration dataItemId="a2" name="Yacc" sequence="55" timestamp="2026-02-24T05:29:39.660554Z">-0.588399</Acceleration>
+          <Acceleration dataItemId="a3" name="Zacc" sequence="56" timestamp="2026-02-24T05:29:39.660554Z">9.9243298</Acceleration>
+          <HumidityRelative dataItemId="h1" name="humd" sequence="57" subType="ACTUAL" timestamp="2026-02-24T05:29:39.660554Z">51.0988358648898</HumidityRelative>
+          <Wattage dataItemId="p1" name="power" sequence="58" subType="ACTUAL" timestamp="2026-02-24T05:29:39.660554Z">2.72046113014221</Wattage>
+          <Temperature dataItemId="t1" name="temp" sequence="51" subType="ACTUAL" timestamp="2026-02-24T05:29:36.758433Z">17.437</Temperature>
+        </Samples>
+        <Events>
+          <Availability dataItemId="avail" sequence="46" timestamp="2026-02-24T05:29:36.092219Z">AVAILABLE</Availability>
+          <PowerState dataItemId="ps" name="powerstate" sequence="53" subType="LINE" timestamp="2026-02-24T05:29:36.758433Z">ON</PowerState>
+          <AssetChanged dataItemId="s1_asset_chg" sequence="2" timestamp="2026-02-24T05:11:01.77406Z">UNAVAILABLE</AssetChanged>
+          <AssetRemoved dataItemId="s1_asset_rem" sequence="1" timestamp="2026-02-24T05:11:01.773261Z">UNAVAILABLE</AssetRemoved>
+        </Events>
+      </ComponentStream>
+    </DeviceStream>
+  </Streams>
+</MTConnectStreams>
