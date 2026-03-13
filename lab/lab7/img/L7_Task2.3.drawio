@@ -1,0 +1,96 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0" version="29.6.1">
+  <diagram name="Page-1" id="NjlDQ7QZP63i5-pEtaor">
+    <mxGraphModel dx="776" dy="1105" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Mp3DkJ_HLWPASodFQgwQ-22" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#FF4205;" value="" vertex="1">
+          <mxGeometry height="95" width="360" x="40" y="405" as="geometry" />
+        </mxCell>
+        <mxCell id="Mp3DkJ_HLWPASodFQgwQ-23" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#FF4205;" value="" vertex="1">
+          <mxGeometry height="95" width="360" x="40" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="Mp3DkJ_HLWPASodFQgwQ-24" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#FF4205;" value="" vertex="1">
+          <mxGeometry height="95" width="360" x="40" y="595" as="geometry" />
+        </mxCell>
+        <mxCell id="Mp3DkJ_HLWPASodFQgwQ-21" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=light-dark(#11FF11,#00FF33);" value="" vertex="1">
+          <mxGeometry height="390" width="200" x="495" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="Mp3DkJ_HLWPASodFQgwQ-7" edge="1" parent="1" source="Mp3DkJ_HLWPASodFQgwQ-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="Mp3DkJ_HLWPASodFQgwQ-4" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Mp3DkJ_HLWPASodFQgwQ-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Sensor 1" vertex="1">
+          <mxGeometry height="60" width="120" x="60" y="430" as="geometry" />
+        </mxCell>
+        <mxCell id="Mp3DkJ_HLWPASodFQgwQ-8" edge="1" parent="1" source="Mp3DkJ_HLWPASodFQgwQ-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="Mp3DkJ_HLWPASodFQgwQ-5" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Mp3DkJ_HLWPASodFQgwQ-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Sensor 2" vertex="1">
+          <mxGeometry height="60" width="120" x="60" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="Mp3DkJ_HLWPASodFQgwQ-9" edge="1" parent="1" source="Mp3DkJ_HLWPASodFQgwQ-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="Mp3DkJ_HLWPASodFQgwQ-6" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Mp3DkJ_HLWPASodFQgwQ-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Sensor 3" vertex="1">
+          <mxGeometry height="60" width="120" x="60" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="Mp3DkJ_HLWPASodFQgwQ-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Custom Adapter for Sensor 1" vertex="1">
+          <mxGeometry height="60" width="120" x="265" y="430" as="geometry" />
+        </mxCell>
+        <mxCell id="Mp3DkJ_HLWPASodFQgwQ-12" edge="1" parent="1" source="Mp3DkJ_HLWPASodFQgwQ-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="530" y="550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Mp3DkJ_HLWPASodFQgwQ-15" connectable="0" parent="Mp3DkJ_HLWPASodFQgwQ-12" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Port 2" vertex="1">
+          <mxGeometry relative="1" x="-0.5862" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Mp3DkJ_HLWPASodFQgwQ-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Custom Adapter for Sensor 2" vertex="1">
+          <mxGeometry height="60" width="120" x="265" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="Mp3DkJ_HLWPASodFQgwQ-13" edge="1" parent="1" source="Mp3DkJ_HLWPASodFQgwQ-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="460" y="640" />
+              <mxPoint x="460" y="550" />
+            </Array>
+            <mxPoint x="530" y="550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Mp3DkJ_HLWPASodFQgwQ-14" connectable="0" parent="Mp3DkJ_HLWPASodFQgwQ-13" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Port 3" vertex="1">
+          <mxGeometry relative="1" x="-0.6936" y="-4" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Mp3DkJ_HLWPASodFQgwQ-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Custom Adapter for Sensor 3" vertex="1">
+          <mxGeometry height="60" width="120" x="265" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="Mp3DkJ_HLWPASodFQgwQ-18" edge="1" parent="1" source="Mp3DkJ_HLWPASodFQgwQ-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="Mp3DkJ_HLWPASodFQgwQ-17" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Mp3DkJ_HLWPASodFQgwQ-10" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" value="MySQL Database" vertex="1">
+          <mxGeometry height="80" width="130" x="530" y="510" as="geometry" />
+        </mxCell>
+        <mxCell id="Mp3DkJ_HLWPASodFQgwQ-11" edge="1" parent="1" source="Mp3DkJ_HLWPASodFQgwQ-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" target="Mp3DkJ_HLWPASodFQgwQ-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Mp3DkJ_HLWPASodFQgwQ-16" connectable="0" parent="Mp3DkJ_HLWPASodFQgwQ-11" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Port 1" vertex="1">
+          <mxGeometry relative="1" x="-0.7277" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Mp3DkJ_HLWPASodFQgwQ-20" edge="1" parent="1" source="Mp3DkJ_HLWPASodFQgwQ-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="Mp3DkJ_HLWPASodFQgwQ-19" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Mp3DkJ_HLWPASodFQgwQ-17" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Granfana Web Interface&lt;br&gt;(Port 3000)" vertex="1">
+          <mxGeometry height="60" width="120" x="535" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="Mp3DkJ_HLWPASodFQgwQ-19" parent="1" style="whiteSpace=wrap;html=1;rounded=1;" value="End User &amp;amp; Web Dashboards" vertex="1">
+          <mxGeometry height="60" width="120" x="305" y="270" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
