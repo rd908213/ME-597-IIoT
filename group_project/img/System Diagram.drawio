@@ -1,0 +1,64 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0" version="29.6.6">
+  <diagram name="Page-1" id="jVHmE0aB6sgCF-lraS7I">
+    <mxGraphModel dx="776" dy="1105" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="_gGTP6GzAQj4mDmvMWHR-4" edge="1" parent="1" source="_gGTP6GzAQj4mDmvMWHR-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="_gGTP6GzAQj4mDmvMWHR-3" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_gGTP6GzAQj4mDmvMWHR-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="ADXL345 Accelerometer" vertex="1">
+          <mxGeometry height="60" width="120" x="70" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="_gGTP6GzAQj4mDmvMWHR-6" edge="1" parent="1" source="_gGTP6GzAQj4mDmvMWHR-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="_gGTP6GzAQj4mDmvMWHR-5" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_gGTP6GzAQj4mDmvMWHR-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="DS18B20 Thermocouple" vertex="1">
+          <mxGeometry height="60" width="120" x="70" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="_gGTP6GzAQj4mDmvMWHR-9" edge="1" parent="1" source="_gGTP6GzAQj4mDmvMWHR-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="_gGTP6GzAQj4mDmvMWHR-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_gGTP6GzAQj4mDmvMWHR-3" parent="1" style="whiteSpace=wrap;html=1;rounded=0;" value="MTConnect Adapter" vertex="1">
+          <mxGeometry height="60" width="120" x="270" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="_gGTP6GzAQj4mDmvMWHR-8" edge="1" parent="1" source="_gGTP6GzAQj4mDmvMWHR-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="_gGTP6GzAQj4mDmvMWHR-7" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_gGTP6GzAQj4mDmvMWHR-5" parent="1" style="whiteSpace=wrap;html=1;rounded=0;" value="MTConnect Adapter" vertex="1">
+          <mxGeometry height="60" width="120" x="270" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="_gGTP6GzAQj4mDmvMWHR-11" edge="1" parent="1" source="_gGTP6GzAQj4mDmvMWHR-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="_gGTP6GzAQj4mDmvMWHR-10" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_gGTP6GzAQj4mDmvMWHR-17" edge="1" parent="1" source="_gGTP6GzAQj4mDmvMWHR-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="_gGTP6GzAQj4mDmvMWHR-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_gGTP6GzAQj4mDmvMWHR-7" parent="1" style="whiteSpace=wrap;html=1;rounded=0;" value="MTConnect Agent" vertex="1">
+          <mxGeometry height="60" width="120" x="480" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="_gGTP6GzAQj4mDmvMWHR-13" edge="1" parent="1" source="_gGTP6GzAQj4mDmvMWHR-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="_gGTP6GzAQj4mDmvMWHR-12" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_gGTP6GzAQj4mDmvMWHR-10" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" value="MySQL Database" vertex="1">
+          <mxGeometry height="80" width="100" x="490" y="390" as="geometry" />
+        </mxCell>
+        <mxCell id="_gGTP6GzAQj4mDmvMWHR-15" edge="1" parent="1" source="_gGTP6GzAQj4mDmvMWHR-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="_gGTP6GzAQj4mDmvMWHR-14" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_gGTP6GzAQj4mDmvMWHR-12" parent="1" style="whiteSpace=wrap;html=1;" value="Frontend Dashboards" vertex="1">
+          <mxGeometry height="60" width="120" x="480" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="_gGTP6GzAQj4mDmvMWHR-14" parent="1" style="whiteSpace=wrap;html=1;" value="End User" vertex="1">
+          <mxGeometry height="60" width="120" x="280" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="_gGTP6GzAQj4mDmvMWHR-18" edge="1" parent="1" source="_gGTP6GzAQj4mDmvMWHR-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="_gGTP6GzAQj4mDmvMWHR-10" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_gGTP6GzAQj4mDmvMWHR-16" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Edge Device ML model" vertex="1">
+          <mxGeometry height="60" width="120" x="660" y="400" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
