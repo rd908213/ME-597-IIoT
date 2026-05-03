@@ -209,6 +209,7 @@ __marimo__/
 # Video files
 *.mp4
 *.mov
+*.pptx
 
 # Mac Specific Files
 *.DS_Store
